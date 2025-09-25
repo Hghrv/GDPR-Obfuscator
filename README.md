@@ -88,4 +88,4 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## Legal Notice
 
-All commercial rights related to this project are reserved by the owner Tech Returners (Copyright 2025).
+All commercial rights related to this project are reserved by the owner [Tech Returners](https://www.techreturners.com/) (Copyright 2025).
