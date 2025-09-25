@@ -48,19 +48,19 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ### Framework and Purpose
 
-    Linux CLI
+      Linux CLI
 
-    Python 3
+      Python 3
 
-    Terraform
+      Terraform
 
-    Pytest
+      Pytest
 
-    Boto3
+      Boto3
 
-    Moto
+      Moto
 
-    Make
+      Make
 
 ## How to use
 
