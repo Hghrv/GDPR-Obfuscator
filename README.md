@@ -34,7 +34,9 @@ In addition to those legal requirements, there is also a strong emphasis on the 
 
 ### Objectives
 
-The GDPR framework described previously actually constitutes the rationale for building and Obfuscator to secure sensitive data. In this project we will precisely follow those personal data guidelines as stated in the UK legislation at: <https://www.legislation.gov.uk/eur/2016/679/contents>(The Principles relating to processing of personal data, Article 5 to Article 11A)
+The GDPR framework described previously actually constitutes the rationale for building and Obfuscator to secure sensitive data. In this project we will precisely follow those personal data guidelines as stated in the UK legislation at: <https://www.legislation.gov.uk/eur/2016/679/contents>
+
+(The Principles relating to processing of personal data, Article 5 to Article 11A).
 
 Building our Data Obfuscator library under GDRP regulation and guidelines ensures that data processing platforms and developers can have a viable and optimal option at hand providing up-to-date and secured solutions.
 
