@@ -78,13 +78,13 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## Documentation
 
-    - Obfuscation principles
+* Obfuscation principles
 
-    - Moto, Boto3
+* Moto, Boto3
 
-    - Terraform documentation
+* Terraform documentation
 
-    - Amazon Web Services (AWS)
+* Amazon Web Services (AWS)
 
 ## Legal Notice
 
