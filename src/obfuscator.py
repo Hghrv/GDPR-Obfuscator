@@ -11,7 +11,7 @@ def obfuscate(file_to_obfuscate: str="", pii_fields: list= []):
     pass
 
     # Define bucket name and file key
-    bucket_name = 'gdpr_data-storage'
+    bucket_name = 'gdpr-data-storage'
     file_key = copy.deepcopy(file_to_obfuscate)
     columns_to_obfuscate = copy.deepcopy(pii_fields)
     output_key = 'obfuscated_data/obfuscated-file.csv'
