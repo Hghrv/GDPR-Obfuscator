@@ -8,10 +8,10 @@ s3 = boto3.client('s3')
 
 # Defining the obfuscating module
 def obfuscate(file_to_obfuscate: str="", pii_fields: list= []):
-    pass
-
+    
     # Define bucket name and file key
     bucket_name = 'gdpr-data-storage'
+    bucket_name_output = 'gdpr-obfuscator-ouput'
     file_key = copy.deepcopy(file_to_obfuscate)
     columns_to_obfuscate = copy.deepcopy(pii_fields)
     output_key = 'obfuscated_data/obfuscated-file.csv'
@@ -38,13 +38,13 @@ def obfuscate(file_to_obfuscate: str="", pii_fields: list= []):
     # Convert the CSV to bytestream representation
     bytestream_file = csv_buffer.encode('utf-8')
     
-    # Upload the obfuscated CSV back to S3
-    s3.put_object(Bucket=bucket_name, Key=output_key, Body=csv_buffer.getvalue())
-    print(f"Obfuscated file uploaded to s3://{bucket_name}/{output_key}")
+    # Upload the obfuscated CSV back to output S3
+    s3.put_object(Bucket=bucket_name_output, Key=output_key, Body=csv_buffer.getvalue())
+    print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
 
     # Upload the bytstream representation back to S3
-    s3.put_object(Bucket=bucket_name, Key=output_key, Body=bytestream_file.getvalue())
-    print(f"Bytestream representation uploaded to s3://{bucket_name}/{output_key_1}")
+    s3.put_object(Bucket=bucket_name_output, Key=output_key, Body=bytestream_file.getvalue())
+    print(f"Bytestream representation uploaded to s3://{bucket_name_output}/{output_key_1}")
 
 
 """
