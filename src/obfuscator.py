@@ -3,6 +3,11 @@ import pandas as pd
 import boto3
 from io import StringIO
 
+"""
+    This handler fetches file_to_obfuscate (event), then
+    obfuscates all columns listed in pii_fields (context)
+    and writes result into output s3 bucket
+"""
 # Initialize S3 client
 s3 = boto3.client('s3')
 
