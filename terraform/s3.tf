@@ -1,3 +1,4 @@
+# Creating input s3 bucket
 resource "aws_s3_bucket" "gdpr_data_storage" {
     bucket = "gdpr-data-storage"
     tags = {
@@ -6,6 +7,7 @@ resource "aws_s3_bucket" "gdpr_data_storage" {
     force_destroy = true
 }
 
+# Attaching bucket policy
 resource "aws_iam_policy" "policy" {
   name        = "BucketAccessPolicy"
   policy      = <<EOF
@@ -31,4 +33,3 @@ resource "aws_iam_policy" "policy" {
 }
 EOF
 }
-

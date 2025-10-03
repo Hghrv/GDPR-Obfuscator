@@ -1,3 +1,4 @@
+# Creating output s3 bucket
 resource "aws_s3_bucket" "gdpr-obfuscator-ouput" {
     bucket = "gdpr-obfuscator-ouput"
     tags = {
@@ -6,6 +7,7 @@ resource "aws_s3_bucket" "gdpr-obfuscator-ouput" {
     force_destroy = true
 }
 
+# Attaching bucket policy
 resource "aws_iam_policy" "policy" {
   name        = "BucketAccessPolicy"
   policy      = <<EOF
@@ -27,4 +29,3 @@ resource "aws_iam_policy" "policy" {
 }
 EOF
 }
-

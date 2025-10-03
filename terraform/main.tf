@@ -1,3 +1,4 @@
+# initialising terraform providers and aws region (to apply before adding the included backend s3 block)
 terraform {
   required_providers {
     aws ={
@@ -27,6 +28,8 @@ provider "aws" {
   }
 }
 
+
+# Assigning iam role
 resource "aws_iam_role" "lambda_role" {
   name               = "lambda_execution_role"
   assume_role_policy = jsonencode({
@@ -43,6 +46,7 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+# Attaching iam policy
 resource "aws_iam_policy" "lambda_policy" {
   name        = "lambda_policy"
   description = "Policy for Lambda execution"
@@ -98,17 +102,13 @@ resource "aws_iam_policy" "lambda_policy" {
   })
 }
 
-
-
-
-
-
-
+# Attaching lambda role policy
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.lambda_policy.arn
 }
 
+# Creating a lambda handler with zipped dependencies
 resource "aws_lambda_function" "lambda_handler" {
   role          = aws_iam_role.lambda_role.arn
   function_name = "lambda_handler"
