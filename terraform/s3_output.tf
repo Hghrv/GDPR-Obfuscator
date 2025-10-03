@@ -1,7 +1,7 @@
-resource "aws_s3_bucket" "gdpr_data_storage" {
-    bucket = "gdpr-data-storage"
+resource "aws_s3_bucket" "gdpr-obfuscator-ouput" {
+    bucket = "gdpr-obfuscator-ouput"
     tags = {
-        Name = "gdpr obfuscator bucket"
+        Name = "gdpr output bucket"
     }
     force_destroy = true
 }
@@ -19,13 +19,9 @@ resource "aws_iam_policy" "policy" {
             },
             "Action": [
                 "s3:GetObject",
-                "s3:GetObjectAcl",
-                "s3:ListBucket"
+                "s3:PutObject"
             ],
-            "Resource": [
-                "arn:aws:s3:::gdpr-data-storage",
-                "arn:aws:s3:::gdpr-data-storage/*"
-            ]
+            "Resource": "arn:aws:s3:::gdpr-obfuscator-ouput/*"
         }
     ]
 }
