@@ -147,6 +147,8 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 * AWS_cli
   <https://docs.aws.amazon.com/cli/latest/userguide/cli_s3_code_examples.html>
 
-## Legal Notice
+## Licence
 
-All commercial rights related to this project are reserved by the owner [Tech Returners](https://www.techreturners.com/) (Copyright 2025).
+Legal Notice:
+
+All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
