@@ -11,3 +11,4 @@ black==25.1.0
 python-terraform==
 boto3==1.40.40   
 pandas==2.3.3
+git-lfs # For large zip push handling
