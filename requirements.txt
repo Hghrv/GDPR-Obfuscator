@@ -1,4 +1,5 @@
 # pycryptodome
+# requests
 pytest==8.4.2
 pytest-cov==7.0.0
 coverage==7.6.12
@@ -7,9 +8,9 @@ bandit==1.8.3
 safety
 autopep8
 black==25.1.0
-# requests
 python-terraform==1.13.3
-boto3==1.40.40   
+boto3==1.40.40
+moto==5.1.13    # for mock tests   
 pandas==2.3.3
 git-lfs # For large zip push handling
 make
