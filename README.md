@@ -52,39 +52,100 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       Python 3
 
-      Terraform
+      Terraform for AWS resources creation
 
-      Pytest
+      Pytest for testing
 
-      Boto3
+      Boto3 for aws s3_client handling
 
-      Moto
+      Moto  for mock-testing / secret-manager
 
-      Make
+      Make for automated deployment of project
 
 ## How to use
 
     - System Requirements
-
+      . Linux cli or WSL for Windows
+      . Python 3.12.7
+      . Terraform 1.13
+      . AWS_cli 1.42.40
+      . Make
+ 
     - Installation
+      . Clone repository
+        git clone <link_to_git_repository>
+      . Create and activate virtual environment and export pythonpath
+        python -m venv venv
+        source venv/bin/activate
+        export PYTHONPATH=$pwd
 
-    - AWS Deployment
+      . Install requirements
+        pip install tequirements.txt
+
+      . AWS_cli 1.42.40
+        python -m pip install awscli=1.42.40
+
+      . Terraform 1.13 (Hashicorp installation procedure before terraform backend reconfiguration: optional as already included in requirement.txt)
+        pip install python-terraform=1.13.3
+
+      . Make
+        pip install make
+
+    - AWS Deployment: Follow steps or skip to Make deployment
+      . Step 1 (Use the <-reconfigure> flag after adding terraform backend bloc in main.tf): 
+        terraform init -reconfigure
+
+      . Step 2:
+        Terraform plan
+
+      . Step 3:
+        terraform apply
+
+      or, 
+      
+      Automated deployement with Make
+        Make file
 
     - Integration
+        Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events.
 
-    - Note on Terraform deployment and Passkeys
+
+    - Note on Terraform deployment and Passkeys:
+        Ensure that all package versions are the same across dependencies within the virtual environment.
+
+        . To set your AWS credentials run the folowing sript in your control line interface:
+
+        $ aws configure
+        AWS Access Key ID [None]: YOUR_PROVIDED_ACCESS_ID
+        AWS Secret Access Key [None]: YOUR_PROVIDED_SECRET_KEY
+        Default region name [None]: us-west-2
+        Default output format [None]: json
+
+        . Uploading the test csv file into the input s3 bucket:
+        aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
+
+
+
 
     - Note on Unit-Testing and Mock-Tests
 
 ## Documentation
 
-* Obfuscation principles
+* More on obfuscation principles
+  <https://standards.education.gov.uk/standard/data-anonymisation-pseudonymisation-and-obfuscation#howtommeet>
 
-* Moto, Boto3
+* Boto3 / Hashicorp
+  <https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli>
+
+* Moto
 
 * Terraform documentation
+  <https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli>
 
 * Amazon Web Services (AWS)
+  
+* AWS_cli
+  <https://docs.aws.amazon.com/cli/latest/userguide/cli_s3_code_examples.html>
 
 ## Legal Notice
 
