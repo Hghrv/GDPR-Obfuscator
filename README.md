@@ -137,7 +137,8 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 * Boto3 / Hashicorp
   <https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli>
 
-* Moto
+* Moto / AWS Mock Tests
+  <https://docs.getmoto.org/en/latest/docs/getting_started.html>
 
 * Terraform documentation
   <https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli>
