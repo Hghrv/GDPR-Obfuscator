@@ -2,9 +2,24 @@ import json
 import pandas as pd
 import boto3
 from io import BytesIO
+from src import get_file_from_input_s3, load_into_dataframe, obfuscate, write_to_bytestream, upload_to_ouput_s3
 
-def lambda_handler(event, context):
-    
+def lambda_handler(event, context='aws_context'):
+    """
+
+    Arguments:
+        Event: Any Json dictionary {
+                                        name: 's3:://path/to/file' 
+                                        ppi_fields: [list of fields to obfuscate]
+                                    }
+        Context: Any AWS Lambda context
+
+    Returns:
+        {
+            'statusCode': 200,
+            'body': json.dumps('Obfuscation completed successfully!')
+        }
+    """
     # Initialize S3 client
     s3_client = boto3.client('s3')
 
@@ -17,25 +32,30 @@ def lambda_handler(event, context):
     output_key = 'obfuscated_data/obfuscated-file.csv'  # Define output key
    
     # Download the CSV file from S3
-    response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-    csv_data = response['Body'].read()
+    file = get_file_from_input_s3(bucket_name, file_key)
+    # response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+    # csv_data = response['Body'].read()
     
     # Load the CSV into a Pandas DataFrame
-    df = pd.read_csv(BytesIO(csv_data))
+    df_data = load_into_dataframe(file)
+    # df = pd.read_csv(BytesIO(csv_data))
 
     # Obfuscate values in specified columns with '*' characters
-    for column in columns_to_obfuscate:
-        if column in df.columns:
-            df[column] = df[column].apply(lambda x: '*' * len(str(x)) if pd.notnull(x) else x)
+    df_obfuscated = obfuscate(df_data)
+    # for column in columns_to_obfuscate:
+    #    if column in df.columns:
+    #        df[column] = df[column].apply(lambda x: '*' * len(str(x)) if pd.notnull(x) else x)
     
     # Write the modified DataFrame to a bytestream
-    output_buffer = BytesIO()
-    df.to_csv(output_buffer, index=False)
-    output_buffer.seek(0)
+    bytestream_output = write_to_bytestream(df_obfuscated)
+    # output_buffer = BytesIO()
+    # df.to_csv(output_buffer, index=False)
+    # output_buffer.seek(0)
 
     # Upload bytestream data of obfuscated file to output S3
-    s3_client.put_object(Bucket=bucket_name_output, Key=output_key, Body=output_buffer.getvalue())
-    print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
+    upload_to_ouput_s3(bucket_name_output, output_key, bytestream_output)
+    # s3_client.put_object(Bucket=bucket_name_output, Key=output_key, Body=output_buffer.getvalue())
+    # print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
     
     return {
         'statusCode': 200,
