@@ -1,7 +1,6 @@
-import pandas as pd
+import logging
 import boto3
 from botocore.exceptions import ClientError, ParamValidationError
-import logging
 
 def upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload):
     

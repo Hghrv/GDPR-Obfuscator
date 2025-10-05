@@ -1,8 +1,8 @@
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
-import logging
 import csv
-import pandas as pd
-import json
+import logging
+# import pandas as pd
+# import json
 import boto3
 from moto import mock_aws
 import pytest
