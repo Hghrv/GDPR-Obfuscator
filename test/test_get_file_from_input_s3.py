@@ -1,4 +1,4 @@
-from src.utils import get_file_from_input_s3
+from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
 import logging
 import csv
 import pandas as pd
@@ -31,9 +31,10 @@ def mock_s3_bucket():
 
 # defining tests
 class TestGetFileFromInputS3:
+
     def test_get_csv_file_from_input_s3(self, mock_s3_bucket):
         
-        extracted = get_file_from_input_s3(mock_s3_bucket)
+        extracted = get_file_from_input_s3(mock_s3_bucket, "new_data/test_file.csv")
         assert isinstance(extracted, dict)
         assert "Data_extracted" in extracted            
         assert len(extracted["Data_extracted"]) == 1
@@ -68,3 +69,10 @@ class TestGetFileFromInputS3:
                 get_file_from_input_s3("not-a-bucket")
             assert "An error has occured with the client:" in caplog.text
             assert get_file_from_input_s3("not-a-bucket") == {"Error": str(expected_error)}
+
+class TestLoadIntoDataframe:
+    
+    def test_load_into_dataframe(self, mock_s3_bucket):
+        extracted = get_file_from_input_s3(mock_s3_bucket, "new_data/test_file.csv")
+        response = load_into_dataframe(extracted)
+        assert isinstance(response, pd.DataFrame)
