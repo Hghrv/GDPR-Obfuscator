@@ -8,11 +8,6 @@ import botocore.exceptions
 from unittest.mock import patch
 import pandas as pd
 
-# Json event parameter for lambda handler
-json_event = {
-
-}
-
 # Setting s3 bucket fixture for mock tests
 @pytest.fixture
 def mock_s3_bucket():
@@ -33,6 +28,12 @@ def mock_s3_bucket():
             s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
 
         yield bucket_name
+
+# Json event parameter for TestObfuscatorInput
+json_event = {
+    "file_to_obfuscate": "src/test_file.csv",
+    "pii_fields": ["name", "email_address"]
+}
 
 # defining tests
 class TestObfuscatorInput:
