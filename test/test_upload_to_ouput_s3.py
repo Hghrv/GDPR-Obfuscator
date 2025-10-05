@@ -62,10 +62,10 @@ class TestUploadToOuputS3:
     @mock_aws
     def test_handles_no_such_bucket_error(self):
         s3 = boto3.client("s3")
-        data = json.dumps({"test": "data"})
+        # data = json.dumps({"test": "data"})
 
         with LogCapture() as log:
-            output = upload_to_ouput_s3("non-existant-bucket", "test-key", "test-file")
+            output = upload_to_ouput_s3("non-existant-bucket", "obfuscated_data/obfuscated-file.csv", "src/test_file.csv")
             assert output["result"] == "Failure"
             assert (
                 "root ERROR\n  An error occurred (NoSuchBucket) when "
@@ -74,11 +74,11 @@ class TestUploadToOuputS3:
                 in (str(log))
             )
 
-    def test_handles_filename_error(self, empty_nc_terraformers_ingestion_s3):
-        data = True
-        s3 = empty_nc_terraformers_ingestion_s3
+    def test_handles_filename_error(self, mock_s3_bucket):
+        
+        output_s3 = mock_s3_bucket
         with LogCapture() as log:
-            output = write_to_s3(s3, "test-bucket", "test-file", "pkl", data)
+            output = upload_to_ouput_s3("{output_s3}", "test-key" "non-existant--file")
             assert output["result"] == "Failure"
             assert (
                 "root ERROR\n  Parameter validation failed:\nInvalid "
