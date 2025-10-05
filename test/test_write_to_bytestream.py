@@ -1,34 +1,32 @@
-from src import lambda_handler
+from src.utils import write_to_bytestream
 import logging
-import boto3
-from moto import mock_aws
-import pytest
-import botocore.exceptions
-from unittest.mock import patch
 import pandas as pd
+from io import BytesIO
 
-# Setting s3 bucket fixture for mock tests
-@pytest.fixture
-def mock_s3_bucket():
-    with mock_aws():
-        s3 = boto3.client("s3", region_name="eu-west-2")
-        bucket_name = "test-bucket"
-        s3.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
-        )
-
-        test_files = ["new_data/test_file.csv", "new_data/test_file.json", "new_data/test_file.pkl"]
-        for file in test_files:
-            s3.put_object(Bucket=bucket_name, Key=file)
-
-        with open("./new_data/test_file.csv", "rb") as f:
-            body = f
-            s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
-
-        yield bucket_name
-
-# defining tests
 class TestWriteToBytestream:
     def test_write_to_bytestream(self, mock_s3_bucket):
-        pass
+        
+        df = pd.read_csv('src/test_file.csv')
+        stream_data = write_to_bytestream(df)
+
+        # Assert that stream_data is an instance of io.BytesIO
+        assert isinstance(stream_data, BytesIO), 'stream_data instance is not a a BytesIO object'
+
+        # Assert that the content of stream_data is bytes-like
+        stream_data.seek(0)  # Reset the pointer to the start
+        content = stream_data.read()
+        assert isinstance(content, (bytes, bytearray)), "Content of stream_data is not bytes-like"
+        LOGGER = logging.getLogger(__name__)
+    
+    def test_logs_when_obfuscated_file_is_written_to_bytestream(self, caplog):
+        
+        df = pd.read_csv('src/test_file.csv')
+        stream_data = write_to_bytestream(df)
+        with caplog.at_level(logging.INFO):
+            write_to_bytestream(df)
+        assert "Writing bytestream representation" in caplog.text
+
+    def test_logs_error(self, caplog):
+        
+        error_event = write_to_bytestream()
+        assert "Error" in error_event
