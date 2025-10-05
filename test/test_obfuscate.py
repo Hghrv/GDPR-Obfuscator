@@ -1,34 +1,34 @@
-from src import lambda_handler
+from src.utils import obfuscate
 import logging
-import boto3
-from moto import mock_aws
-import pytest
-import botocore.exceptions
-from unittest.mock import patch
 import pandas as pd
 
-# Setting s3 bucket fixture for mock tests
-@pytest.fixture
-def mock_s3_bucket():
-    with mock_aws():
-        s3 = boto3.client("s3", region_name="eu-west-2")
-        bucket_name = "test-bucket"
-        s3.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
-        )
-
-        test_files = ["new_data/test_file.csv", "new_data/test_file.json", "new_data/test_file.pkl"]
-        for file in test_files:
-            s3.put_object(Bucket=bucket_name, Key=file)
-
-        with open("./new_data/test_file.csv", "rb") as f:
-            body = f
-            s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
-
-        yield bucket_name
-
-# defining tests
 class TestObfuscate:
-    def test_obfuscate(self, mock_s3_bucket):
-        pass
+    def test_obfuscate_(self):
+
+        df = pd.read_csv('src/test_file.csv')
+        pii_list = ["name", "email_address"]
+        expected = {            
+            "student_id": 1234,
+            "name": "************",
+            "course": "Software",
+            "graduation_date": "2024-03-31",
+            "email_address": "*****************"
+        }
+
+        response = obfuscate(df, pii_list)
+        assert response == expected
+
+    LOGGER = logging.getLogger(__name__)
+    
+    def test_logs_when_dataframe_is_obfuscated(self, caplog):
+        
+        df =pd.read_csv('src/test_file.csv')
+        pii_list = ["name", "email_address"]
+        with caplog.at_level(logging.INFO):
+           obfuscate(df, pii_list)
+        assert "Obfuscating specified fields" in caplog.text
+
+    def test_logs_error(self, caplog):
+        
+        error_event = obfuscate()
+        assert "Error" in error_event
