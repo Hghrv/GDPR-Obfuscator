@@ -1,4 +1,4 @@
-from src.utils import obfuscate
+from src.utils.obfuscate import obfuscate
 import logging
 import pandas as pd
 

@@ -11,7 +11,7 @@ def write_to_bytestream(df):
     df.to_csv(output_buffer, index=False)
     output_buffer.seek(0)
     bytestream = output_buffer.getvalue()
-    
+    print("Writing bytestream representation")
     return bytestream
 
     

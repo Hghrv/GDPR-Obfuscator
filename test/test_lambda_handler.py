@@ -1,4 +1,5 @@
 from src import lambda_handler
+from io import BytesIO
 import logging
 import boto3
 from moto import mock_aws

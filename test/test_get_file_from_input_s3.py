@@ -1,4 +1,5 @@
 from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
+from io import BytesIO
 import logging
 import csv
 import pandas as pd
@@ -29,7 +30,7 @@ def mock_s3_bucket():
 
         yield bucket_name
 
-# defining tests
+# Defining class for ingestion test
 class TestGetFileFromInputS3:
 
     def test_get_csv_file_from_input_s3(self, mock_s3_bucket):
@@ -70,8 +71,9 @@ class TestGetFileFromInputS3:
             assert "An error has occured with the client:" in caplog.text
             assert get_file_from_input_s3("not-a-bucket") == {"Error": str(expected_error)}
 
+# Defining class for transformation into pandas dataframe
 class TestLoadIntoDataframe:
-    
+
     def test_load_into_dataframe(self, mock_s3_bucket):
         extracted = get_file_from_input_s3(mock_s3_bucket, "new_data/test_file.csv")
         response = load_into_dataframe(extracted)

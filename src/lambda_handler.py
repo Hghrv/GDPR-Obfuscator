@@ -2,11 +2,13 @@ import json
 import pandas as pd
 import boto3
 from io import BytesIO
-from src import get_file_from_input_s3, load_into_dataframe, obfuscate, write_to_bytestream, upload_to_ouput_s3
+from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
+from src.utils.obfuscate import obfuscate
+from src.utils.write_to_bytestream import write_to_bytestream
+from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
 
 def lambda_handler(event, context='aws_context'):
     """
-
     Arguments:
         Event: Any Json dictionary {
                                         name: 's3:://path/to/file' 
@@ -30,7 +32,7 @@ def lambda_handler(event, context='aws_context'):
     file_key = body.get('file_to_obfuscate', 'new_data/test_file.csv')  # Access event keys
     columns_to_obfuscate = body.get('pii_fields', ["name", "email_address"])
     output_key = 'obfuscated_data/obfuscated-file.csv'  # Define output key
-   
+
     # Download the CSV file from S3
     file = get_file_from_input_s3(bucket_name, file_key)
     # response = s3_client.get_object(Bucket=bucket_name, Key=file_key)

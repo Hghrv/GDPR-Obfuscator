@@ -112,7 +112,10 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
 resource "aws_lambda_function" "lambda_handler" {
   role          = aws_iam_role.lambda_role.arn
   function_name = "lambda_handler"
+  
+  # handler = "python_module.function_in_the_module"
   handler       = "lambda_handler.lambda_handler"
+  
   runtime       = "python3.12"
   filename      = "${path.module}/my_deployment_package.zip"
   source_code_hash = filebase64sha256("my_deployment_package.zip")

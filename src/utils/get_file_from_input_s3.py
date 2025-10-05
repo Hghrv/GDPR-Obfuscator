@@ -2,6 +2,7 @@ import pandas as pd
 import boto3
 import botocore.exceptions
 import logging
+from io import BytesIO
 
 def get_file_from_input_s3(bucket_name, file_key):
     """

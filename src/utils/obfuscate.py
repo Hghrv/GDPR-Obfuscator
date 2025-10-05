@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 
 def obfuscate(df, columns_to_obfuscate):
@@ -10,5 +9,6 @@ def obfuscate(df, columns_to_obfuscate):
     for column in columns_to_obfuscate:
         if column in df.columns:
             df[column] = df[column].apply(lambda x: '*' * len(str(x)) if pd.notnull(x) else x)
-
+    print("Obfuscating specified fields")
+    
     return df
