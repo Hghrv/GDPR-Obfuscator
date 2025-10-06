@@ -14,7 +14,10 @@ def lambda_handler(event, context='aws_context'):
                                         name: 's3:://path/to/file' 
                                         ppi_fields: [list of fields to obfuscate]
                                     }
-        Context: Any AWS Lambda context
+        Context: Any AWS Lambda context 
+                Context will be provided by AWS
+                (ex: watchlogs, sns notifications if enabled, etc.)
+                                                
 
     Returns:
         {

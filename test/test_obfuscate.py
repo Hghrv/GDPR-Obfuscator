@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 
 class TestObfuscate:
-    def test_obfuscate_(self):
+    def test_obfuscation_occurs_in_correct_fields_as_expected(self):
 
         df = pd.read_csv('src/test_file.csv')
         pii_list = ["name", "email_address"]

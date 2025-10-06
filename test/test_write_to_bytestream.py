@@ -16,7 +16,8 @@ class TestWriteToBytestream:
         stream_data.seek(0)  # Reset the pointer to the start
         content = stream_data.read()
         assert isinstance(content, (bytes, bytearray)), "Content of stream_data is not bytes-like"
-        LOGGER = logging.getLogger(__name__)
+    
+    LOGGER = logging.getLogger(__name__)
     
     def test_logs_when_obfuscated_file_is_written_to_bytestream(self, caplog):
         
