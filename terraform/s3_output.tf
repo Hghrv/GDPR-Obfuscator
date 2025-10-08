@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "gdpr-obfuscator-ouput" {
 }
 
 # Attaching bucket policy
-resource "aws_iam_policy" "policy" {
+resource "aws_iam_policy" "output_bucket_policy" {
   name        = "BucketAccessPolicy"
   policy      = <<EOF
 {
@@ -20,7 +20,6 @@ resource "aws_iam_policy" "policy" {
                 "AWS": "arn:aws:iam::910599466119:role/service-role/obfuscator_lambda-role-rflt62d9"
             },
             "Action": [
-                "s3:GetObject",
                 "s3:PutObject"
             ],
             "Resource": "arn:aws:s3:::gdpr-obfuscator-ouput/*"
@@ -29,3 +28,4 @@ resource "aws_iam_policy" "policy" {
 }
 EOF
 }
+
