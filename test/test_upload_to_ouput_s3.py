@@ -1,5 +1,6 @@
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
 import csv
+import os
 import logging
 # import pandas as pd
 # import json
@@ -21,14 +22,6 @@ def mock_s3_bucket():
             CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
         )
 
-        test_files = ["new_data/test_file.csv", "new_data/test_file.json", "new_data/test_file.pkl"]
-        for file in test_files:
-            s3.put_object(Bucket=bucket_name, Key=file)
-
-        with open("./new_data/test_file.csv", "rb") as f:
-            body = f
-            s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
-
         yield bucket_name
 
 # defining tests
@@ -39,24 +32,29 @@ class TestUploadToOuputS3:
         output_key = "obfuscated_data/obfuscated-file.csv"
         file_to_upload = "src/test_file.csv"
 
-        response = upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload)
-        upload_test = csv.reader(response)
-        assert isinstance(upload_test, csv.reader), "response is not a csv.reader instance"
+        upload_test = upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload)
+        # Asserting that the function returns a dictionary
+        assert isinstance(upload_test, dict), "response is not a dictionary instance"
+        
+        response = upload_test["output key"]
+        # Asserting whether the file name ends with '.csv' extension
+        assert response.endswith('.csv')
 
     def test_upload_to_ouput_s3(self, mock_s3_bucket):
         
         # s3 = empty_nc_terraformers_ingestion_s3
         # data = json.dumps({"test": "data"})   # for json instance
 
-        s3 = mock_s3_bucket
         output_key = "obfuscated_data/obfuscated-file.csv"
         file_to_upload = "src/test_file.csv"
 
-        response = upload_to_ouput_s3(s3, output_key, file_to_upload)
+        response = upload_to_ouput_s3(mock_s3_bucket, output_key, file_to_upload)
 
-        expected_output ="mock_s3_bucket/obfuscated_data/obfuscated-file.csv"
-        objects = s3.list_objects(Bucket = mock_s3_bucket)
-        assert objects["Contents"][0]["obfuscated file"] == expected_output
+        expected_output ="obfuscated_data/obfuscated-file.csv"
+        
+        s3_client = boto3.client('s3')
+        objects = s3_client.list_objects_v2(Bucket = mock_s3_bucket)
+        assert objects["Contents"][0]['Key']== expected_output
         assert response["result"] == "Success"
 
     @mock_aws
@@ -67,26 +65,18 @@ class TestUploadToOuputS3:
         with LogCapture() as log:
             output = upload_to_ouput_s3("non-existant-bucket", "obfuscated_data/obfuscated-file.csv", "src/test_file.csv")
             assert output["result"] == "Failure"
-            assert (
-                "root ERROR\n  An error occurred (NoSuchBucket) when "
+            assert ("root ERROR\n  An error occurred (NoSuchBucket) when "
                 + "calling the PutObject operation: The specified bucket"
-                + " does not exist"
-                in (str(log))
-            )
+                + " does not exist") in (str(log))
 
     def test_handles_filename_error(self, mock_s3_bucket):
         
         output_s3 = mock_s3_bucket
         with LogCapture() as log:
-            output = upload_to_ouput_s3("{output_s3}", "test-key" "non-existant--file")
+            output = upload_to_ouput_s3("{output_s3}", "test-key", "non-existant-file.csv")
             assert output["result"] == "Failure"
-            assert (
-                "root ERROR\n  Parameter validation failed:\nInvalid "
-                + "type for parameter Body, value: True, type: <class "
-                + "'bool'>, valid types: <class 'bytes'>, <class "
-                + "'bytearray'>, file-like object"
-                in str(log)
-            )
+            assert "Parameter validation failed:\nInvalid" in str(log)
+           
 
 """
     def test_returns_dict(self, empty_nc_terraformers_ingestion_s3):

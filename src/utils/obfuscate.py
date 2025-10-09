@@ -12,7 +12,6 @@ def obfuscate(df, columns_to_obfuscate):
         for column in columns_to_obfuscate:
             if column in df.columns:
                 df[column] = df[column].apply(lambda x: "'***'" if pd.notnull(x) else x)
-                #df[column] = df[column].astype(str).apply(lambda x: '*' * len(x))
         print("Obfuscating specified fields")
         
         logger = logging.getLogger(__name__)
