@@ -1,14 +1,9 @@
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
-import csv
-import os
-import logging
 # import pandas as pd
 # import json
 import boto3
 from moto import mock_aws
 import pytest
-import botocore.exceptions
-from unittest.mock import patch
 from testfixtures import LogCapture
 
 # Setting s3 bucket fixture for mock tests

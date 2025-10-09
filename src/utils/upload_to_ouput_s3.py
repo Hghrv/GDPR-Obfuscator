@@ -25,5 +25,4 @@ def upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload):
     
     except (ClientError, ParamValidationError) as e:
         logging.error(e)
-        print(e)
         return {"result": "Failure"}

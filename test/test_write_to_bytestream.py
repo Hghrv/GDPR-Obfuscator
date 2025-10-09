@@ -2,32 +2,28 @@ from src.utils.write_to_bytestream import write_to_bytestream
 import logging
 import pandas as pd
 from io import BytesIO
+from testfixtures import LogCapture
 
 class TestWriteToBytestream:
-    def test_write_to_bytestream(self, mock_s3_bucket):
+    def test_write_to_bytestream(self):
         
         df = pd.read_csv('src/test_file.csv')
         stream_data = write_to_bytestream(df)
-
-        # Assert that stream_data is an instance of io.BytesIO
-        assert isinstance(stream_data, BytesIO), 'stream_data instance is not a a BytesIO object'
-
-        # Assert that the content of stream_data is bytes-like
-        stream_data.seek(0)  # Reset the pointer to the start
-        content = stream_data.read()
-        assert isinstance(content, (bytes, bytearray)), "Content of stream_data is not bytes-like"
+        assert isinstance(stream_data, (bytes, bytearray)), "Content of stream_data is not bytes-like"
     
     LOGGER = logging.getLogger(__name__)
     
-    def test_logs_when_obfuscated_file_is_written_to_bytestream(self, caplog):
+    def test_logs_when_obfuscated_file_is_written_to_bytestream(self):
         
         df = pd.read_csv('src/test_file.csv')
-        stream_data = write_to_bytestream(df)
-        with caplog.at_level(logging.INFO):
-            write_to_bytestream(df)
-        assert "Writing bytestream representation" in caplog.text
-
-    def test_logs_error(self, caplog):
         
-        error_event = write_to_bytestream()
-        assert "Error" in error_event
+        with LogCapture() as log:
+            write_to_bytestream(df)
+        assert "Bytestream representation successful" in str(log)
+
+    def test_logs_error(self):
+                
+        with LogCapture() as log:
+            error_event = write_to_bytestream('invalid_input')
+            assert error_event["result"] == "Failure"
+            assert "root ERROR\n  'str' object has no attribute 'to_csv'" in str(log)
