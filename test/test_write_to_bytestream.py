@@ -1,7 +1,6 @@
 from src.utils.write_to_bytestream import write_to_bytestream
 import logging
 import pandas as pd
-from io import BytesIO
 from testfixtures import LogCapture
 
 class TestWriteToBytestream:

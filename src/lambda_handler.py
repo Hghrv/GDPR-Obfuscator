@@ -69,3 +69,4 @@ def lambda_handler(event, context='aws_context'):
         }
     except Exception as e:
             print(e)
+            raise e

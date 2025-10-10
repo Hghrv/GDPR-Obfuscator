@@ -1,4 +1,4 @@
-from src import lambda_handler
+from src.lambda_handler import lambda_handler
 from io import BytesIO
 import logging
 import boto3
@@ -19,11 +19,11 @@ def mock_s3_bucket():
             CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
         )
 
-        test_files = ["new_data/test_file.csv", "new_data/test_file.json", "new_data/test_file.pkl"]
+        test_files = ["src/test_file.csv", "src/test_file.json", "src/test_file.pkl"]
         for file in test_files:
             s3.put_object(Bucket=bucket_name, Key=file)
 
-        with open("./new_data/test_file.csv", "rb") as f:
+        with open("./src/test_file.csv", "rb") as f:
             body = f
             s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
 
