@@ -1,5 +1,4 @@
 from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
-from io import BytesIO
 import logging
 import csv
 import pandas as pd
@@ -7,7 +6,7 @@ import boto3
 from moto import mock_aws
 import pytest
 import botocore.exceptions
-from unittest.mock import patch
+from testfixtures import LogCapture
 
 # Setting s3 bucket fixture for mock tests
 @pytest.fixture
@@ -20,11 +19,11 @@ def mock_s3_bucket():
             CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
         )
 
-        test_files = ["new_data/test_file.csv", "new_data/test_file.json", "new_data/test_file.pkl"]
+        test_files = ["src/test_file.csv", "src/test_file.json", "src/test_file.pkl"]
         for file in test_files:
             s3.put_object(Bucket=bucket_name, Key=file)
 
-        with open("./new_data/test_file.csv", "rb") as f:
+        with open("./src/test_file.csv", "rb") as f:
             body = f
             s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
 
@@ -35,46 +34,53 @@ class TestGetFileFromInputS3:
 
     def test_get_csv_file_from_input_s3(self, mock_s3_bucket):
         
-        extracted = get_file_from_input_s3(mock_s3_bucket, "new_data/test_file.csv")
+        extracted = get_file_from_input_s3(mock_s3_bucket, "src/test_file.csv")
         assert isinstance(extracted, dict)
-        assert "Data_extracted" in extracted            
-        assert len(extracted["Data_extracted"]) == 1
-        assert "new_data/test_file.csv" in extracted["Data_extracted"]
-            
-        response = csv.reader(extracted["Data_extracted"])
-        assert isinstance(response, csv.reader), "response is not a csv.reader instance"
+        assert all(var in extracted for var in ["Data_extracted", "body", "result"])            
+        assert len(extracted) == 3
+        assert extracted["result"] == "Success"
+
+        response = extracted["Data_extracted"]
+        assert isinstance(response, (bytes, bytearray)), "Response content is not bytes-like"
+
+        read_response =  csv.reader(response)
+        line_count_response = sum(1 for row in read_response)
+        csv_reader = csv.reader("src/test_file.csv")
+        line_count_expected = sum(1 for row in read_response)
+        assert line_count_response == line_count_expected
+        for row in range(line_count_expected):
+            assert read_response[row] ==  csv_reader[row]
 
     LOGGER = logging.getLogger(__name__)
     
     def test_logs_when_file_is_extracted(self, caplog, mock_s3_bucket):
+        
         with caplog.at_level(logging.INFO):
-            get_file_from_input_s3(mock_s3_bucket, "new_data/test_file.csv")
-        assert "Extracting data from s3 bucket" in caplog.text
+            get_file_from_input_s3(mock_s3_bucket, "src/test_file.csv")
+        assert "File extracted from s3 bucket" in caplog.text
 
-    def test_logs_error(self, caplog):
-        expected_error_messsage = {
-            "Error": {
-                "Code": "NoSuchBucket",
-                "Message": "The specified bucket does not exist",
-            }
-        }
-        expected_error = botocore.exceptions.ClientError(
-            expected_error_messsage, "ListObjectsV2"
-        )
-
-        with patch("boto3.client") as mock_boto_client:
-            mock_s3 = mock_boto_client.return_value
-            mock_s3.list_objects_v2.side_effect = expected_error
-
-            with caplog.at_level(logging.ERROR):
-                get_file_from_input_s3("not-a-bucket")
-            assert "An error has occured with the client:" in caplog.text
-            assert get_file_from_input_s3("not-a-bucket") == {"Error": str(expected_error)}
-
+    def test_logs_error(self):
+        
+        with LogCapture() as log:
+            error_event = get_file_from_input_s3("not-a-bucket", "src/test_file.csv")
+        assert error_event["result"] == "Failure"
+        assert "An error has occured with the client:" in str(log)        
+        assert error_event["result"] == "Failure"
 # Defining class for transformation into pandas dataframe
 class TestLoadIntoDataframe:
 
     def test_load_into_dataframe(self, mock_s3_bucket):
-        extracted = get_file_from_input_s3(mock_s3_bucket, "new_data/test_file.csv")
-        response = load_into_dataframe(extracted)
+        
+        # Assert that the installed version of pandas is 2.3.3, compatible with s3fs
+        assert pd.__version__ == '2.3.3', f"Expected version '2.3.3', but got {pd.__version__}"
+        print(pd.__version__)
+
+        #get_file = get_file_from_input_s3(mock_s3_bucket, "src/test_file.csv")
+        #extracted = get_file["Data_extracted"]
+        
+        #print(extracted)
+        #print(type(extracted))
+        with LogCapture() as log:
+            response = load_into_dataframe(mock_s3_bucket, "src/test_file.csv")
+        assert "File content loaded into dataframe" in str(log)        
         assert isinstance(response, pd.DataFrame)
