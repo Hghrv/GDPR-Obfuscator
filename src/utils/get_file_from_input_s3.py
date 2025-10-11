@@ -38,7 +38,7 @@ def get_file_from_input_s3(bucket_name, file_key):
                 "Error": str(e)
                 }
 
-def load_into_dataframe(bucket_name, file_key):
+def load_csv_into_dataframe(bucket_name, file_key):
     
     try:
         s3 = boto3.client('s3')

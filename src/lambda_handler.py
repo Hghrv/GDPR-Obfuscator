@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import boto3
 from io import BytesIO
-from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
+from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe
 from src.utils.obfuscate import obfuscate
 from src.utils.write_to_bytestream import write_to_bytestream
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3

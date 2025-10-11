@@ -1,4 +1,4 @@
-from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
+from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe
 import logging
 import csv
 import pandas as pd
@@ -56,24 +56,23 @@ class TestGetFileFromInputS3:
 
     LOGGER = logging.getLogger(__name__)
     
-    def test_logs_when_file_is_extracted(self, caplog, mock_s3_bucket):
+    def test_get_file_from_input_s3_logs_when_file_is_extracted(self, caplog, mock_s3_bucket):
         
         with caplog.at_level(logging.INFO):
             get_file_from_input_s3(mock_s3_bucket, "src/test_file.csv")
         assert "File extracted from s3 bucket" in caplog.text
 
-    def test_logs_error(self):
+    def test_get_file_from_input_s3_logs_error(self):
         
         with LogCapture() as log:
             error_event = get_file_from_input_s3("not-a-bucket", "src/test_file.csv")
         assert error_event["result"] == "Failure"
         assert "An error has occured with the client:" in str(log)        
-        assert error_event["result"] == "Failure"
 
 # Defining class for transformation into pandas dataframe
 class TestLoadIntoDataframe:
     
-    def test_load_into_dataframe(self, mock_s3_bucket):
+    def test_load_csv_into_dataframe(self, mock_s3_bucket):
         
         # Asserting that the installed version of pandas is 2.3.3, compatible with s3fs
         assert pd.__version__ == '2.3.3', f"Expected version '2.3.3', but got {pd.__version__}"
@@ -87,7 +86,7 @@ class TestLoadIntoDataframe:
         test_bucket_name = mock_s3_bucket
         test_file_key = "new_data/test_file.csv"
         
-        load = load_into_dataframe(bucket_name=test_bucket_name, file_key=test_file_key)
+        load = load_csv_into_dataframe(bucket_name=test_bucket_name, file_key=test_file_key)
         assert load["result"] == "Success"
         
         df = load["dataframe"]
@@ -98,3 +97,11 @@ class TestLoadIntoDataframe:
         assert not df.empty
         assert list(df.columns) == ["student_id", "name", "course", "cohort", "graduation_date", "email_address"]
         assert df.iloc[0]["student_id"] == 1234
+    
+    LOGGER = logging.getLogger(__name__)
+
+    def test_load_csv_into_dataframe_logs_error(self):
+        with LogCapture() as log:
+            error_event = load_csv_into_dataframe("not-a-bucket", "src/test_file.csv")
+        assert error_event["result"] == "Failure"
+        assert "An error has occured with the client:" in str(log)
