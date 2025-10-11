@@ -38,12 +38,13 @@ def lambda_handler(event, context='aws_context'):
 
     try:
         # Download the CSV file from S3
-        file = get_file_from_input_s3(bucket_name, file_key)
+        #file = get_file_from_input_s3(bucket_name, file_key)
         # response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
         # csv_data = response['Body'].read()
         
-        # Load the CSV into a Pandas DataFrame
-        df_data = load_into_dataframe(file)
+        # Load the csv from s3 to a Pandas DataFrame
+        df_data = get_file_from_input_s3(bucket_name, file_key)
+        #df_data = load_into_dataframe(file)
         # df = pd.read_csv(BytesIO(csv_data))
 
         # Obfuscate values in specified columns with '*' characters
