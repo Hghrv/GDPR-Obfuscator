@@ -1,5 +1,5 @@
 from src.lambda_handler import lambda_handler
-from io import BytesIO
+from io import BytesIO, StringIO 
 import logging
 import boto3
 from moto import mock_aws
@@ -7,6 +7,7 @@ import pytest
 import botocore.exceptions
 from unittest.mock import patch
 import pandas as pd
+import json
 
 # Setting s3 bucket fixture for mock tests
 @pytest.fixture
@@ -52,7 +53,7 @@ class TestObfuscationOfCsvFiles:
 
         response = lambda_handler(json_event, aws_context)
         assert response['statusCode'] == 200
-        assert response['body'] == "Obfuscation completed successfully!"
+        assert response['body'] == json.dumps("Obfuscation completed successfully!")
 
     def test_lambda_handler_uploads_csv_files_to_output_s3_bucket(self):
         # Json event parameter for TestObfuscatorInput
@@ -75,7 +76,7 @@ class TestObfuscationOfCsvFiles:
         lambda_handler(json_event, aws_context)
         response = s3_client.list_objects(Bucket=bucket_name_output, Prefix="obfuscated_data")
         objects = response.get('Contents')
-        assert "src/output_test_file.csv" in objects[0]
+        assert "obfuscated_data/obfuscated-file.csv" in objects[0]['Key']
 
 
     def test_lambda_handler_writes_output_csv_file_into_bytestream(self):
@@ -98,14 +99,9 @@ class TestObfuscationOfCsvFiles:
         
         lambda_handler(json_event, aws_context)   # Calling the lambda function    
         response =s3_client.get_object(Bucket=bucket_name_output, Key=output_key)
-            
-        # Assert that stream_data is an instance of io.BytesIO
-        assert isinstance(response, BytesIO), 'stream_data instance is not a a BytesIO object'
-
-        # Assert that the content of stream_data is bytes-like
-        response.seek(0)  # Reset the pointer to the start
-        content = response.read()
-        assert isinstance(content, (bytes, bytearray)), "Content of stream_data is not bytes-like"
+       
+        # Assert that reponse is bytes-like
+        assert isinstance(response['Body'].read(), (bytes, bytearray)), "Content of stream_data is not bytes-like"
 
     def test_lambda_handler_obfuscates_csv_files_correctly(self):
         # Json event parameter for TestObfuscatorInput
@@ -118,7 +114,7 @@ class TestObfuscationOfCsvFiles:
         # Tests parameters
         bucket_name = 'gdpr-data-storage'   # Input
         input_test_key = "new_data/test_file.csv"
-        test_file = "src/test_file.csv"
+        test_file = """student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"""
         bucket_name_output = 'gdpr-obfuscator-ouput'    # Output 
         output_key = 'obfuscated_data/obfuscated-file.csv'
         
@@ -127,15 +123,21 @@ class TestObfuscationOfCsvFiles:
         
         lambda_handler(json_event, aws_context)   # Calling the lambda function    
         response =s3_client.get_object(Bucket=bucket_name_output, Key=output_key)
-        df = pd.read_csv(response)
-        expected = pd.read_csv("src/output_test_file.csv")
-        assert df == expected
+        csv_buffer = response["Body"].read().decode("utf-8")
+        df = pd.read_csv(StringIO(csv_buffer))
+        expected_output = """student_id,name,course,cohort,graduation_date,email_address\n 1234,'***','Software','December','2024-03-31','***'"""
+        expected = pd.read_csv(StringIO(expected_output))
+        print(df)
+        print(expected)
+        print(df.loc[[0], ['name']])
+        for column in ["student_id", "name", "course", "cohort", "graduation_date", "email_address"]:
+            assert df.iloc[0][column]== expected.iloc[0][column]
 
     def test_lambda_handler_obfuscates_csv_files_correctly_with_different_event_scenarios(self):
         pass
 
 class TestObfuscatorReturnsStatusCode200ForInputFilesWithVariousStructures:
-    def test_lambda_handler_returns_status_code_200_with_files_containing_various_number_of_columns(self):
+    def test_lambda_handler_returns_status_code_200_with_various_number_of_fields_to_obfuscate(self):
         json_event_1 = {
                         "file_to_obfuscate": "new_data/test_file.csv", # input test-key
                         "pii_fields": ["name"]
@@ -144,7 +146,7 @@ class TestObfuscatorReturnsStatusCode200ForInputFilesWithVariousStructures:
 
         response = lambda_handler(json_event_1, aws_context)
         assert response['statusCode'] == 200
-        assert response['body'] == "Obfuscation completed successfully!"
+        assert response['body'] == json.dumps("Obfuscation completed successfully!")
         
         json_event_2 = {
                         "file_to_obfuscate": "new_data/test_file.csv", # input test-key
@@ -154,7 +156,7 @@ class TestObfuscatorReturnsStatusCode200ForInputFilesWithVariousStructures:
 
         response = lambda_handler(json_event_2, aws_context)
         assert response['statusCode'] == 200
-        assert response['body'] == "Obfuscation completed successfully!"
+        assert response['body'] == json.dumps("Obfuscation completed successfully!")
 
 ################>>>> To add <<<<<#####################       
     def test_lambda_handler_returns_status_code_200_with_files_containing_various_number_of_rows(self):

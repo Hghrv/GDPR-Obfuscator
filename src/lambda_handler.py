@@ -43,12 +43,14 @@ def lambda_handler(event, context='aws_context'):
         # csv_data = response['Body'].read()
         
         # Load the csv from s3 to a Pandas DataFrame
-        df_data = get_file_from_input_s3(bucket_name, file_key)
-        #df_data = load_into_dataframe(file)
+        #df_data = get_file_from_input_s3(bucket_name, file_key)
         # df = pd.read_csv(BytesIO(csv_data))
-
+        
+        df_data = load_csv_into_dataframe(bucket_name, file_key)
+        df = df_data['dataframe']
+        
         # Obfuscate values in specified columns with '*' characters
-        df_obfuscated = obfuscate(df_data)
+        df_obfuscated = obfuscate(df, columns_to_obfuscate)
         # for column in columns_to_obfuscate:
         #    if column in df.columns:
         #        df[column] = df[column].apply(lambda x: '*' * len(str(x)) if pd.notnull(x) else x)
@@ -70,4 +72,5 @@ def lambda_handler(event, context='aws_context'):
         }
     except Exception as e:
             print(e)
+            
             raise e
