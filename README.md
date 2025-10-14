@@ -140,7 +140,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         - To get the obfuscated result from the output s3:
         aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
 
-        Alternatively, you may set an envent bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment (See link  documentation section to setup EventBridge on your AWS Console)
+        Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment. By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
 
 ### Note on Terraform deployment and Passkeys
 
