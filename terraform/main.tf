@@ -20,9 +20,9 @@ provider "aws" {
   default_tags {
     tags = {
         ProjectName  = "GDPR Obfuscator"
-        Team         = "tech-returners"
+        Team         = "Tech-Returners"
         DeployedFrom = "Terraform"
-        Repository   = "gdpr-project"
+        Repository   = "GDPR-Project"
         Enviroment   = "dev"
     }
   }
