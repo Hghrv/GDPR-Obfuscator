@@ -176,20 +176,93 @@ class TestObfuscatorlogsErrors:
         assert "Error" in error_event
 
 ################>>>> To add <<<<<#####################
-"""
+
 class TestObfuscatorForJsonAndParquetFileTypes:
     
-    def test_lambda_handler_obfuscates_json_files(self):
-        pass
-    def test_lambda_handler_obfuscates_parquet_files(self):
-        pass
+    def test_lambda_handler_handles_json_files_and_output_has_expected_obfuscated_json_content(self):
+        json_event = {
+                        "file_to_obfuscate": "new_data/test_file.csv", # input test-key
+                        "pii_fields": ["name", "email_address"]
+                    } 
+        aws_context = 'provided_aws_context'
+        
+        # Tests parameters
+        bucket_name = 'gdpr-data-storage'   # Input
+        input_test_key = "new_data/test_file.json"
+        test_file = {
+            "student_id": 1234,
+            "name": 'John Smith',
+            "course": 'Software',
+            "cohort": 'December',
+            "graduation_date": '2024-03-31',
+            "email_address": 'j.smith@email.com'
+        }
+        bucket_name_output = 'gdpr-obfuscator-ouput'    # Output 
+        output_key = 'obfuscated_data/obfuscated-file.json'
+        
+        s3_client = boto3.client('s3')
+        s3_client.put_object(Bucket=bucket_name, Key=input_test_key, Body=test_file)
+        
+        lambda_handler(json_event, aws_context)   # Calling the lambda function    
+        response =s3_client.get_object(Bucket=bucket_name_output, Key=output_key)
+        buffer = response["Body"].read().decode("utf-8")
+        data = json.loads(buffer)
+        #df = pd.json_normalize(data)
+        #print(json.dumps(data, indent=4))
 
-class TestObfuscatorOutputHasExpectedObfuscatedContent:
-    def test_obfuscator_output_has_expected_obfuscated_content_for_csv_file(self):
-         pass
-    def test_obfuscator_output_has_expected_obfuscated_content_for_json_file(self):
-         pass
-    def test_obfuscator_output_has_expected_obfuscated_content_for_pkl_file(self):
-         pass
-"""
-########################################################
+        expected_output = {
+            "student_id": 1234,
+            "name": '***',
+            "course": 'Software',
+            "cohort": 'December',
+            "graduation_date": '2024-03-31',
+            "email_address": '***'
+        }
+        #expected = pd.read_csv(StringIO(expected_output))
+        print(data)
+        print(expected_output)
+        assert json.dumps(data, indent=4) == expected_output
+
+    def test_lambda_handler_handles_parquet_files_and_output_has_expected_obfuscated_parquet_content(self):
+        json_event = {
+                        "file_to_obfuscate": "new_data/test_file.csv", # input test-key
+                        "pii_fields": ["name", "email_address"]
+                    } 
+        aws_context = 'provided_aws_context'
+        
+        # Tests parameters
+        bucket_name = 'gdpr-data-storage'   # Input
+        input_test_key = "new_data/test_file.parquet"
+        test_file = {
+                    "student_id": [1234],
+                    "name": ['John Smith'],
+                    "course": ['Software'],
+                    "cohort": ['December'],
+                    "graduation_date": ['2024-03-31'],
+                    "email_address": ['j.smith@email.com']
+                    }
+        bucket_name_output = 'gdpr-obfuscator-ouput'    # Output 
+        output_key = 'obfuscated_data/obfuscated-file.parquet'
+        
+        s3_client = boto3.client('s3')
+        s3_client.put_object(Bucket=bucket_name, Key=input_test_key, Body=test_file)
+        
+        lambda_handler(json_event, aws_context)   # Calling the lambda function    
+        response =s3_client.get_object(Bucket=bucket_name_output, Key=output_key)
+        #csv_buffer = response["Body"].read().decode("utf-8")
+        df = pd.read_parquet(output_key, storage_options={"anon": False})
+        expected_output = {
+                    "student_id": [1234],
+                    "name": ['***'],
+                    "course": ['Software'],
+                    "cohort": ['December'],
+                    "graduation_date": ['2024-03-31'],
+                    "email_address": ['***']
+                    }
+        df_expected = pd.DataFrame(expected_output)
+        print(df)
+        print(df_expected)
+        for column in ["student_id", "name", "course", "cohort", "graduation_date", "email_address"]:
+            assert df.iloc[0][column] == df_expected.iloc[0][column]
+
+
