@@ -1,4 +1,7 @@
 import json
+import pyarrow.json as paj
+import pyarrow.parquet as pap
+import io
 import pandas as pd
 import boto3
 from io import BytesIO
@@ -38,37 +41,22 @@ def lambda_handler(event, context='aws_context'):
     output_key_json = 'obfuscated_data/obfuscated-file.json'
     output_key_parquet = 'obfuscated_data/obfuscated-file.parquet'
 
-    try:
-        # Download the CSV file from S3
-        #file = get_file_from_input_s3(bucket_name, file_key)
-        # response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-        # csv_data = response['Body'].read()
-        
-        # Load the csv from s3 to a Pandas DataFrame
-        #df_data = get_file_from_input_s3(bucket_name, file_key)
-        # df = pd.read_csv(BytesIO(csv_data))
-        
+    try:        
         df_data = load_csv_into_dataframe(bucket_name, file_key)
         df = df_data['dataframe']
         
         # Obfuscate values in specified columns with '*' characters
         df_obfuscated = obfuscate(df, columns_to_obfuscate)
-        # for column in columns_to_obfuscate:
-        #    if column in df.columns:
-        #        df[column] = df[column].apply(lambda x: '*' * len(str(x)) if pd.notnull(x) else x)
-        
+                
         # Write the modified DataFrame to a bytestream
         bytestream_output = write_to_bytestream(df_obfuscated)
-        # output_buffer = BytesIO()
-        # df.to_csv(output_buffer, index=False)
-        # output_buffer.seek(0)
-
-        # Upload bytestream data of obfuscated file to output S3
-        for output_path in [output_key, output_key_json, output_key_parquet]:
-            upload_to_ouput_s3(bucket_name_output, output_path, bytestream_output)
         
-        # s3_client.put_object(Bucket=bucket_name_output, Key=output_key, Body=output_buffer.getvalue())
-        # print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
+        # Upload bytestream data of obfuscated file to output S3
+        upload_to_ouput_s3(bucket_name_output, output_key, bytestream_output)
+        bytestream_output_json = {}
+        upload_to_ouput_s3(bucket_name_output, output_key_json, bytestream_output_json)
+        bytestream_output_parquet = {}
+        upload_to_ouput_s3(bucket_name_output, output_key_parquet, bytestream_output_parquet)
         
         return {
             'statusCode': 200,
