@@ -1,10 +1,11 @@
+import csv
 import json
 import pyarrow.json as paj
 import pyarrow.parquet as pap
 import io
 import pandas as pd
 import boto3
-from io import BytesIO
+from io import BytesIO, StringIO
 from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe
 from src.utils.obfuscate import obfuscate
 from src.utils.write_to_bytestream import write_to_bytestream
@@ -51,11 +52,41 @@ def lambda_handler(event, context='aws_context'):
         # Write the modified DataFrame to a bytestream
         bytestream_output = write_to_bytestream(df_obfuscated)
         
-        # Upload bytestream data of obfuscated file to output S3
+        # Upload csv bytestream data of obfuscated file to output S3
         upload_to_ouput_s3(bucket_name_output, output_key, bytestream_output)
+        
+        # Upload json bytestream data of obfuscated file to output S3
         bytestream_output_json = {}
+        def csv_to_json(csv_bytes):
+            # Input CSV bytestream
+            csv_bytes = BytesIO(b"Name,Age,City\nAlice,30,London\nBob,25,Paris")
+
+            # Convert CSV bytes to JSON bytes
+            csv_file = StringIO(csv_bytes.getvalue().decode('utf-8'))
+            reader = csv.DictReader(csv_file)
+
+            # Convert rows to JSON
+            json_data = json.dumps([row for row in reader])
+
+            # Output JSON bytestream
+            json_bytes = BytesIO(json_data.encode('utf-8'))
+        bytestream_output_json = csv_to_json(bytestream_output)
         upload_to_ouput_s3(bucket_name_output, output_key_json, bytestream_output_json)
+        
+        # Upload parquet bytestream data of obfuscated file to output S3
         bytestream_output_parquet = {}
+        def json_to_parquet(json_bytes):
+            # Convert JSON bytestream to a PyArrow Table
+            json_stream = io.BytesIO(json_bytes)
+            table = paj.read_json(json_stream)
+            
+            # Convert the PyArrow Table to a Parquet bytestream
+            parquet_stream = io.BytesIO()
+            pap.write_table(table, parquet_stream)
+            
+            # Return the Parquet bytestream
+            return parquet_stream.getvalue()
+        bytestream_output_parquet = json_to_parquet(bytestream_output_json)    
         upload_to_ouput_s3(bucket_name_output, output_key_parquet, bytestream_output_parquet)
         
         return {
