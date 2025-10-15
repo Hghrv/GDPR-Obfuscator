@@ -55,11 +55,12 @@ def lambda_handler(event, context='aws_context'):
         # Upload csv bytestream data of obfuscated file to output S3
         upload_to_ouput_s3(bucket_name_output, output_key, bytestream_output)
         
+        """
         # Upload json bytestream data of obfuscated file to output S3
         bytestream_output_json = {}
         def csv_to_json(csv_bytes):
             # Input CSV bytestream
-            csv_bytes = BytesIO(b"Name,Age,City\nAlice,30,London\nBob,25,Paris")
+            #csv_bytes = BytesIO(b"Name,Age,City\nAlice,30,London\nBob,25,Paris")
 
             # Convert CSV bytes to JSON bytes
             csv_file = StringIO(csv_bytes.getvalue().decode('utf-8'))
@@ -73,7 +74,7 @@ def lambda_handler(event, context='aws_context'):
         bytestream_output_json = csv_to_json(bytestream_output)
         upload_to_ouput_s3(bucket_name_output, output_key_json, bytestream_output_json)
         
-        """
+        
         # Upload parquet bytestream data of obfuscated file to output S3
         bytestream_output_parquet = {}
         def json_to_parquet(json_bytes):

@@ -175,7 +175,7 @@ class TestObfuscatorlogsErrors:
         error_event = lambda_handler()
         assert "Error" in error_event
 
-################>>>> To add after debugging and successful tests <<<<<#####################
+################>>>> To add after refactoring, debugging and successful tests <<<<<#####################
 """
 class TestObfuscatorForJsonAndParquetFileTypes:
     
