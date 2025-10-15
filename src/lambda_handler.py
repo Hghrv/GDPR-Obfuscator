@@ -35,6 +35,8 @@ def lambda_handler(event, context='aws_context'):
     file_key = body.get('file_to_obfuscate', 'new_data/test_file.csv')  # Access event keys
     columns_to_obfuscate = body.get('pii_fields', ["name", "email_address"])
     output_key = 'obfuscated_data/obfuscated-file.csv'  # Define output key
+    output_key_json = 'obfuscated_data/obfuscated-file.json'
+    output_key_parquet = 'obfuscated_data/obfuscated-file.parquet'
 
     try:
         # Download the CSV file from S3
@@ -62,7 +64,9 @@ def lambda_handler(event, context='aws_context'):
         # output_buffer.seek(0)
 
         # Upload bytestream data of obfuscated file to output S3
-        upload_to_ouput_s3(bucket_name_output, output_key, bytestream_output)
+        for output_path in [output_key, output_key_json, output_key_parquet]:
+            upload_to_ouput_s3(bucket_name_output, output_path, bytestream_output)
+        
         # s3_client.put_object(Bucket=bucket_name_output, Key=output_key, Body=output_buffer.getvalue())
         # print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
         
@@ -72,5 +76,5 @@ def lambda_handler(event, context='aws_context'):
         }
     except Exception as e:
             print(e)
-            
+
             raise e
