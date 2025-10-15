@@ -3,7 +3,7 @@ import logging
 
 def obfuscate(df, columns_to_obfuscate):
     """
-    This function obfuscates values in specified columns with '*' characters
+    This function obfuscates values in specified columns with '***' characters
     - argument: the dataframe file and a corresponding list of personally 
                 identifiable fields to obfuscate
     - returns : the transformed dataframe
