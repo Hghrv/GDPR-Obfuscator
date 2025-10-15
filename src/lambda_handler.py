@@ -73,6 +73,7 @@ def lambda_handler(event, context='aws_context'):
         bytestream_output_json = csv_to_json(bytestream_output)
         upload_to_ouput_s3(bucket_name_output, output_key_json, bytestream_output_json)
         
+        """
         # Upload parquet bytestream data of obfuscated file to output S3
         bytestream_output_parquet = {}
         def json_to_parquet(json_bytes):
@@ -88,7 +89,7 @@ def lambda_handler(event, context='aws_context'):
             return parquet_stream.getvalue()
         bytestream_output_parquet = json_to_parquet(bytestream_output_json)    
         upload_to_ouput_s3(bucket_name_output, output_key_parquet, bytestream_output_parquet)
-        
+        """
         return {
             'statusCode': 200,
             'body': json.dumps('Obfuscation completed successfully!')
