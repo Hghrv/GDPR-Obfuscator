@@ -1,11 +1,12 @@
+from io import BytesIO, StringIO
+import csv
+import json
 
-# Upload json bytestream data of obfuscated file to output S3
 def csv_to_json(csv_bytes):
     """
-    This function uploads json bytestream data of obfuscated file to output S3
-    - argument: the dataframe file and a corresponding list of personally 
-                identifiable fields to obfuscate
-    - returns : a json bytestream file with .jon
+    This function transforms csv bytestream data into a json bytestream data
+    - argument: the csv bytestream data
+    - returns : a json bytestream file with .json extension
     """
     # Input CSV bytestream
     #csv_bytes = BytesIO(b"Name,Age,City\nAlice,30,London\nBob,25,Paris")
