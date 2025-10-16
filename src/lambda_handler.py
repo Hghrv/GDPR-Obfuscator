@@ -1,11 +1,11 @@
-import csv
+#import csv
 import json
-import pyarrow.json as paj
-import pyarrow.parquet as pap
-import io
-import pandas as pd
+#import pyarrow.json as paj
+#import pyarrow.parquet as pap
+#import io
+#import pandas as pd
 import boto3
-from io import BytesIO, StringIO
+#from io import BytesIO, StringIO
 from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe
 from src.utils.obfuscate import obfuscate
 from src.utils.write_to_bytestream import write_to_bytestream
