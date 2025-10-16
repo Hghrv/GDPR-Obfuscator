@@ -1,13 +1,5 @@
 from src.utils.csv_to_json import csv_to_json
-import logging
-import pandas as pd
 import pytest
-from pandas.testing import assert_frame_equal
-from pprint import pprint
-
-from io import BytesIO, StringIO
-import csv
-import json
 
 class TestCsvToJson:
     def test_transformation_returns_with_correct_json_dictionary(self):
