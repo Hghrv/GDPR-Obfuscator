@@ -6,7 +6,7 @@ import io
 import pandas as pd
 import boto3
 from io import BytesIO, StringIO
-from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe, 
+from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe
 from src.utils.obfuscate import obfuscate
 from src.utils.write_to_bytestream import write_to_bytestream
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
@@ -59,12 +59,10 @@ def lambda_handler(event, context='aws_context'):
         
         
         # Upload json bytestream data of obfuscated file to output S3
-        bytestream_output_json = {}
         bytestream_output_json = csv_to_json(bytestream_output)
         upload_to_ouput_s3(bucket_name_output, output_key_json, bytestream_output_json)
         
         # Upload parquet bytestream data of obfuscated file to output S3
-        bytestream_output_parquet = {}
         bytestream_output_parquet = json_to_parquet(bytestream_output_json)    
         upload_to_ouput_s3(bucket_name_output, output_key_parquet, bytestream_output_parquet)
         
