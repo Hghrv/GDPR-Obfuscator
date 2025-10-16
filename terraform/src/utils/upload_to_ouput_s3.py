@@ -19,6 +19,7 @@ def upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload):
         print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
         return {
                 "obfuscated file": "{bucket_name_output}/{output_key}",
+                "output key": output_key,
                 "result": "Success"
                 }
     

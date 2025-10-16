@@ -1,11 +1,17 @@
+#import csv
 import json
-import pandas as pd
+#import pyarrow.json as paj
+#import pyarrow.parquet as pap
+#import io
+#import pandas as pd
 import boto3
-from io import BytesIO
-from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_into_dataframe
+#from io import BytesIO, StringIO
+from src.utils.get_file_from_input_s3 import get_file_from_input_s3, load_csv_into_dataframe
 from src.utils.obfuscate import obfuscate
 from src.utils.write_to_bytestream import write_to_bytestream
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
+from src.utils.csv_to_json import csv_to_json
+from src.utils.json_to_parquet import json_to_parquet
 
 def lambda_handler(event, context='aws_context'):
     """
@@ -35,33 +41,30 @@ def lambda_handler(event, context='aws_context'):
     file_key = body.get('file_to_obfuscate', 'new_data/test_file.csv')  # Access event keys
     columns_to_obfuscate = body.get('pii_fields', ["name", "email_address"])
     output_key = 'obfuscated_data/obfuscated-file.csv'  # Define output key
+    output_key_json = 'obfuscated_data/obfuscated-file.json'
+    output_key_parquet = 'obfuscated_data/obfuscated-file.parquet'
 
-    try:
-        # Download the CSV file from S3
-        file = get_file_from_input_s3(bucket_name, file_key)
-        # response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-        # csv_data = response['Body'].read()
+    try:        
+        df_data = load_csv_into_dataframe(bucket_name, file_key)
+        df = df_data['dataframe']
         
-        # Load the CSV into a Pandas DataFrame
-        df_data = load_into_dataframe(file)
-        # df = pd.read_csv(BytesIO(csv_data))
-
         # Obfuscate values in specified columns with '*' characters
-        df_obfuscated = obfuscate(df_data)
-        # for column in columns_to_obfuscate:
-        #    if column in df.columns:
-        #        df[column] = df[column].apply(lambda x: '*' * len(str(x)) if pd.notnull(x) else x)
-        
+        df_obfuscated = obfuscate(df, columns_to_obfuscate)
+                
         # Write the modified DataFrame to a bytestream
         bytestream_output = write_to_bytestream(df_obfuscated)
-        # output_buffer = BytesIO()
-        # df.to_csv(output_buffer, index=False)
-        # output_buffer.seek(0)
-
-        # Upload bytestream data of obfuscated file to output S3
+        
+        # Upload csv bytestream data of obfuscated file to output S3
         upload_to_ouput_s3(bucket_name_output, output_key, bytestream_output)
-        # s3_client.put_object(Bucket=bucket_name_output, Key=output_key, Body=output_buffer.getvalue())
-        # print(f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")
+        
+        
+        # Upload json bytestream data of obfuscated file to output S3
+        bytestream_output_json = csv_to_json(bytestream_output)
+        upload_to_ouput_s3(bucket_name_output, output_key_json, bytestream_output_json)
+        
+        # Upload parquet bytestream data of obfuscated file to output S3
+        bytestream_output_parquet = json_to_parquet(bytestream_output_json)    
+        upload_to_ouput_s3(bucket_name_output, output_key_parquet, bytestream_output_parquet)
         
         return {
             'statusCode': 200,
@@ -69,3 +72,5 @@ def lambda_handler(event, context='aws_context'):
         }
     except Exception as e:
             print(e)
+
+            raise e
