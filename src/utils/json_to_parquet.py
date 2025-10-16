@@ -1,4 +1,4 @@
-from io import BytesIO, StringIO
+from io import BytesIO
 import pyarrow as pa
 import pyarrow.parquet as pap
 import pandas as pd

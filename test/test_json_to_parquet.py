@@ -1,6 +1,4 @@
 from src.utils.json_to_parquet import json_to_parquet
-#import logging
-#import pyarrow.json as paj
 import pyarrow.parquet as pap
 import pandas as pd
 import pytest
@@ -8,8 +6,8 @@ from pandas.testing import assert_frame_equal
 from io import BytesIO
 
 class TestJsonToParquet:
-    def test_obfuscation_occurs_in_correct_fields_as_expected(self):
-        # def test_transformation_returns_with_correct_json_dictionary(self):
+    def test_transformation_returns_with_correct_parquet_format(self):
+
         test_json_bytes = b'{"student_id": 1234, "name": "***", "course": "Software", "cohort": "December", "graduation_date": "2024-03-31", "email_address": "***"}'
         response = json_to_parquet(test_json_bytes)
         assert isinstance(response, (bytes, bytearray)), "Output is not byte-like"

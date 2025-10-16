@@ -1,7 +1,6 @@
-from io import BytesIO, StringIO
+from io import StringIO
 import csv
 import json
-import logging
 
 def csv_to_json(csv_bytes):
     """
