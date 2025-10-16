@@ -25,18 +25,7 @@ def json_to_parquet(json_bytes: bytes) -> bytes:
         pap.write_table(table, parquet_buffer)  # Converting the PyArrow Table to a Parquet bytestream
         
         return parquet_buffer.getvalue()
-    
-        """# Convert JSON bytestream to a PyArrow Table
-        json_stream = BytesIO(json_bytes)
-        table = paj.read_json(json_stream)
                 
-        # Convert the PyArrow Table to a Parquet bytestream
-        parquet_stream = BytesIO()
-        pap.write_table(table, parquet_stream)
-                
-        # Return the Parquet bytestream
-        return parquet_stream.getvalue()"""
-    
     except Exception as e:
         print(e)
         raise e 

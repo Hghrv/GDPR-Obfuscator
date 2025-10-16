@@ -30,17 +30,7 @@ class TestJsonToParquet:
         # Assert DataFrame equality
         pd.testing.assert_frame_equal(df, expected_df)
         
-        """ 
-            expected_parquet_bytes = ( b'[{"student_id": "[1234]", '
-                                b'"name": "[\'***\']", '
-                                b'"course": "[\'Software\']", '
-                                b'"cohort": "[\'December\']", '
-                                b'"graduation_date": "[\'2024-03-31\']", '
-                                b'"email_address": "[\'***\']"}]')
-            
-        assert response == expected_parquet_bytes
-        assert isinstance(response, (bytes, bytearray)), "Output is not byte-like"
-        """
+        
 
 
     def test_logs_errors(self, caplog):
