@@ -66,6 +66,40 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## How to use
 
+    This general-purpose tool to process data being ingested to AWS and intercept personally identifiable information (PII). A Json event for this purpose requires a file key (here the input key s3://gdpr-data-storage/new_data/test_file.csv) and PII fields to obfuscate (here the name and email address) in order to trigger the Lambda handler.
+    
+    When a csv file containing is sent into the input s3 bucket with the key s3://gdpr-data-storage/new_data/test_file.csv, the stored file with be reset with the table new content.
+    
+    This new object will trigger the Lambda and the obfuscated file will be reset in the output s3 bucket with the key s3://'obfuscated_data/obfuscated-file.csv'.
+
+    The tool can also handle valid Json and Parquet files. In that case set the input file key with .json or .paquet extension ( for example, s3://gdpr-data-storage/new_data/test_file.jon or s3://gdpr-data-storage/new_data/test_file.parquet)
+
+    Example of valid Csv content:
+    student_id,name,course,cohort,graduation_date,email_address
+    1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'
+
+    Example of valid Json content:
+    {
+      "student_id": 1234,
+      "name": 'John Smith',
+      "course": 'Software',
+      "cohort": 'December',
+      "graduation_date": '2024-03-31',
+      "email_address": 'j.smith@email.com'
+    }
+
+    Example of valid Parquet content:
+    {
+      "student_id": [1234],
+      "name": ['John Smith'],
+      "course": ['Software'],
+      "cohort": ['December'],
+      "graduation_date": ['2024-03-31'],
+      "email_address": ['j.smith@email.com']
+    }
+
+    In summary, upload a file to the s3 input key and download the obfuscated result from the output s3, using aws_cli or a pre-configured AWS EventBridge.More details on the following notes.
+
     - System Requirements
       . Linux cli or WSL for Windows
       . Python 3.12.7
@@ -140,7 +174,9 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         - To get the obfuscated result from the output s3:
         aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
 
-        Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment. By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
+        Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
+        
+        By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
 
 ### Note on Terraform deployment and Passkeys
 
