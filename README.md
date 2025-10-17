@@ -142,7 +142,8 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         pip install make
 
 ### AWS Deployment: Follow steps or skip to Make deployment section
-
+      In the terminal, navigate to the terraform folder and follow the following steps:
+      
       . Step 1 (Use the <-reconfigure> flag after adding terraform backend bloc in main.tf):
         terraform init
         (Without backend s3)
