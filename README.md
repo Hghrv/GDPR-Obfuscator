@@ -142,6 +142,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         pip install make
 
 ### AWS Deployment: Follow steps or skip to Make deployment section
+
       In the terminal, navigate to the terraform folder and follow the following steps:
       
       . Step 1 (Use the <-reconfigure> flag after adding terraform backend bloc in main.tf):
@@ -203,13 +204,13 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       Run tests on your terminal with the command below:
       pytest
-
+      
       Test files in the <test> folder can also be run indidually by specifing the path. For example:
       pytest src/test_lambda_handler.py
 
       For more detailed printing, add the "-vvvrp" flag as below:
-      pytest -vvvrp src/test_lambda_handler.py 
-
+      pytest -vvvrp
+      
       Running the Makefile altenatively will also securely run the tests by default before deploying the Terraform scripts to create the ressources on the AWS account. Three s3 buckets will be created (input, terraform backend, and output) and the lambda_handler.py will be deployed with all the utility modules and zipped dependencies, which will meet MVP requirements.
 
       

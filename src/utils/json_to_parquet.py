@@ -17,7 +17,7 @@ def json_to_parquet(json_bytes: bytes) -> bytes:
 
         # Laoding the json bytestream
         json_data = [json.loads(line)
-                     for line in BytesIO(json_bytes).readlines()]
+                    for line in BytesIO(json_bytes).readlines()]
 
         # Converting json bytestream data to a Pandas DataFrame
         df = pd.DataFrame(json_data)
