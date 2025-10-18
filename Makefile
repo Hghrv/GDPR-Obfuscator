@@ -11,7 +11,7 @@ requirements:
 	@echo "Installng project requirements"
 	pip install requirements.txt
 	
-terraform_step1:
+terraform_step1: 
 	@echo "Initialising modules..."
 	cd terraform && terraform init || terraform init -reconfigure
 
@@ -25,7 +25,7 @@ terraform_step3:
 
 unit_tests:
 	@echo "Running unit-tests with pytest modules..."
-	pytest -vvvrp
+	cd .. || pytest -vvvrp
 
 pep8tests: 
 	@echo "Running PEP8 compliance tests..."
@@ -37,22 +37,4 @@ safety:
 
 clean:
 	@echo "Cleaning up..."
-	# put your clean commands here
-
-# Makefile for automated terraform deployement
-Requirements: pip install requirements.txt
-RunRequirements: Requirements
-
-UnitTests: pytest -vvvrp
-RunUnitTests: make UnitTests
-
-PEP8Tests: pytest --cov=. --cov-report=term-missing && flake8 ."
-RunPEP8Tests: make PEP8Tests
-
-Safety: safety scan
-RunSafetyTest: Safety
-
-TfInit: cd terraform && terraform init || terraform init -reconfigure
-TfPlan: terraform plan
-TfApply: terraform apply
-RunTf: TfInit TfPlan TfApply
+	rm -f *.o my_executable
