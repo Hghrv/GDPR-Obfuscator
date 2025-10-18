@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 from io import BytesIO
 
+
 def write_to_bytestream(df):
     """
     This function obfuscates values in specified columns with '*' characters
@@ -16,10 +17,8 @@ def write_to_bytestream(df):
         print("Writing bytestream representation")
         logging.info("Bytestream representation successful")
         return bytestream
-    
+
     except (Exception) as e:
         logging.error(e)
         print(e)
         return {"result": "Failure"}
-
-    

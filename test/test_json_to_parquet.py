@@ -5,18 +5,20 @@ import pytest
 from pandas.testing import assert_frame_equal
 from io import BytesIO
 
+
 class TestJsonToParquet:
     def test_transformation_returns_with_correct_parquet_format(self):
 
         test_json_bytes = b'{"student_id": 1234, "name": "***", "course": "Software", "cohort": "December", "graduation_date": "2024-03-31", "email_address": "***"}'
         response = json_to_parquet(test_json_bytes)
-        assert isinstance(response, (bytes, bytearray)), "Output is not byte-like"
+        assert isinstance(response, (bytes, bytearray)
+                          ), "Output is not byte-like"
 
         # Read Parquet bytestream back into a DataFrame
         parquet_buffer = BytesIO(response)
         table = pap.read_table(parquet_buffer)
         df = table.to_pandas()
-        
+
         # Expected DataFrame
         expected_df = pd.DataFrame([{
                                     "student_id": 1234,
@@ -26,12 +28,9 @@ class TestJsonToParquet:
                                     "graduation_date": '2024-03-31',
                                     "email_address": '***'
                                     }])
-        
+
         # Assert DataFrame equality
         pd.testing.assert_frame_equal(df, expected_df)
-        
-        
-
 
     def test_logs_errors(self, caplog):
         with pytest.raises(Exception):
