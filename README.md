@@ -105,9 +105,9 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       <file key>      'new_data/test_file.csv'
       
       <input path>          s3://{bucket_name}/{file_key}
-              or      s3://obfuscated_data/obfuscated-file.csv
-              or      s3://obfuscated_data/obfuscated-file.json
-              or      s3://obfuscated_data/obfuscated-file.parquet
+              or      s3://gdpr-data-storage/new_data/test_file.csv
+              or      s3://gdpr-data-storage/new_data/test_file.json
+              or      s3://gdpr-data-storage/new_data/test_file.parquet
 
       <output path>   s3:/obfuscated_data/obfuscated-file.csv
               or      s3://obfuscated_data/obfuscated-file.json
