@@ -1,5 +1,5 @@
 # Makefile for automated terraform deployement
-.PHONY: all build test clean
+.PHONY: project build requirements terraform_step1 terraform_step2 terraform_step3 unit_tests pep8tests Safety clean 
 # Running 'make all' will build requirements, then follow terrafom steps, then run tests, then clean
 project: build requirements terraform_step1 terraform_step2 terraform_step3 unit_tests pep8tests Safety clean 
 
