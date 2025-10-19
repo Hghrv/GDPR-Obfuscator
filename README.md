@@ -187,22 +187,38 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
     - Integration
         Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events
 
-        - To upload your local csv file to the bucket:
-        aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
+### Using AWS_CLI to upload data and retrieve output
 
+        - To upload your local csv file to the bucket:
+            aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
+
+        - Calling the Lambda handler (if needed manually):
+            python src/lambda_handler.py
+         
         Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
         Example of valid csv input: "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
 
         - To get the obfuscated result from the output s3:
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <your_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated-file.csv <your_local_path>
         
         or
         
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <your_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.json <your_local_path>
 
         or
 
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <your_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.parquet <your_local_path>
+
+### Similar example using Boto3 to upload CSV data and retrieve CSV output
+
+        - Uploading your local csv file to the bucket:
+            s3_client = boto3.client('s3')
+            s3_client.put_object(Bucket="gdpr-data-storage",
+                            Key="new_data/test_file.csv", Body=file_to_upload)
+                            
+        - Retrieving the obfuscated result from the output s3:
+            s3_client = boto3.client('s3')
+            s3_client.get_object(Bucket="gdpr-obfuscator-ouput", Key="obfuscated_data/obfuscated-file.csv")
 
         Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
         

@@ -78,3 +78,12 @@ def lambda_handler(event, context='aws_context'):
         print(e)
 
         raise e
+
+if __name__ == "__main__":
+    # This block runs only if executed directly
+    json_event = {
+            "file_to_obfuscate": "new_data/test_file.csv",  # input test-key
+            "pii_fields": ["name", "email_address"]
+        }
+    aws_context = 'aws_context'
+    lambda_handler(json_event, context='aws_context')
