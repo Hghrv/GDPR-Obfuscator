@@ -2,7 +2,7 @@
 
 Obfuscator Project for sensitive data under UK GDPR (General Data Protection Regulation, United Kindom).
 
-This project provides an efficient and secure obfuscating tool that meets current GDPR requirements and that can also be deployed to create resources on a valid AWS account. The tool can easily be integrated in third party applications, for example by coling or importing the repository as a library module into a Python codebase, or by setting a streaming event bridge on the AWS console.
+This project provides an efficient and secure obfuscating tool that meets current GDPR requirements and that can effectively be used to process sensitive data uploaded to a S3 location in a valid AWS account. S3 offers a secure, flexible and scalable solution as the tool can easily be integrated in third party applications, for example by cloning or importing the repository as a library module into a Python codebase, or by setting a synchronised streaming event bridge on the AWS console.
 
 ## Context
 
@@ -132,12 +132,12 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
     - Installation
       . Clone repository:
           git clone <link_to_git_repository>
-      . Create and activate virtual environment and export pythonpath:
+      . Create and activate virtual environment and export pythonpath(Step 1):
           python -m venv venv
           source venv/bin/activate
           export PYTHONPATH=$pwd
        
-      . Install requirements:
+      . Install requirements (Step 2):
           pip install tequirements.txt
 
       . Install AWS_cli 1.42.40:
@@ -159,33 +159,26 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       . Terraform 1.13 (Hashicorp installation procedure before terraform backend reconfiguration: optional as already included in requirement.txt)
         pip install python-terraform=1.13.3
 
-      . Make
-        pip install make
+### Projet setup: Follow steps or skip to Make deployment section
 
-### AWS Deployment: Follow steps or skip to Make deployment section
-
-      In the terminal, navigate to the terraform folder and follow the following steps:
+      In the terminal follow the following steps to initialise the project and run tests:
       
-      . Step 1 (Use the <-reconfigure> flag after adding terraform backend bloc in main.tf):
-        terraform init
-        (Without backend s3)
+      . Step 1 Create / Activate your Virtual environment as in (step 1 in previous section).
 
-        terraform init -reconfigure
-        (With backend S3)
+      . Step 2: Install requirements (as in step 2 in previous section).
 
-      . Step 2:
-        Terraform plan
-
-      . Step 3:
-        terraform apply
+      . Step 3: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
 
       or, 
       
-### Automated deployment with Make
+### Automated setup with Make
 
-      To skip the steps above, run the following command after installing AWS_CLI:
-      
-        Make project
+      To skip the steps above:
+      . Ensure that Make is installed:
+          pip install make
+
+      . Run the following command after installing AWS_CLI:
+          Make project
 
       The Make file will setup the virtual environment if needed, will install required libraries, then run unit-tests as well as PEP8 compliance and Safety tests. Pytest-cov and Pytest-flake8 are used as pluggings with pytest and Safety is used to scan seurity potential vulnerabilities and issues.
 
@@ -201,15 +194,15 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         Example of valid csv input: "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
 
         - To get the obfuscated result from the output s3:
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <your_local_path>
         
         or
         
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <you_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <your_local_path>
 
         or
 
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <you_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <your_local_path>
 
         Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
         
