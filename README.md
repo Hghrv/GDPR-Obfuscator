@@ -162,7 +162,13 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       
 ### Automated deployement with Make
 
-        Make file
+      To skip the steps above, run the following command after installing AWS_CLI:
+      
+        Make project
+
+      The Make file will setup the virtual environment if needed, will install required libraries, then run unit-tests as well as PEP8 compliance and Safety tests. Pytest-cov and Pytest-flake8 are used as pluggings with pytest and Safety is used to scan seurity potential vulnerabilities and issues.
+
+      This project provides a coverage of 95% causing no vulnerabilities found and the tests reports demonstrate. This could be explained by numerous comment lines and the backend policies enforced and ignored during testing.
 
     - Integration
         Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events
@@ -202,14 +208,23 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety compliance. While the lambda handler was tested with an actual AWS account, the utility modules where tested with mock_aws to simulate s3 buckets and reduce storage costs in the potential event where an event bridge might sent a large quantity of files for tests. This is in order to maintain elasticity of resources. Similarly, separate output and backend s3 buckets are created to avoid reccuring costs (when input and output are processed in the same s3 bucket) according to recommendations on the AWS website.
 
-      Run tests on your terminal with the command below:
-      pytest
-      
-      Test files in the <test> folder can also be run indidually by specifing the path. For example:
-      pytest src/test_lambda_handler.py
+      . Run tests on your terminal with the command below:
+          pytest
 
-      For more detailed printing, add the "-vvvrp" flag as below:
-      pytest -vvvrp
+      . For more detailed printing, add the "-vvvrp" flag as below:
+        pytest -vvvrp
+
+      . To run PEP8 compliance tests:
+          pytest --cov=. --cov-report=term-missing && flake8 .
+      
+      . For vulnerability and safety checks:
+          safety scan
+
+      . Test files in the <test/> folder can also be run indidually by specifing the path. For example:
+          pytest src/test_lambda_handler.py
+
+     . Running Makefile for automated workflow:
+          make project
       
       Running the Makefile altenatively will also securely run the tests by default before deploying the Terraform scripts to create the ressources on the AWS account. Three s3 buckets will be created (input, terraform backend, and output) and the lambda_handler.py will be deployed with all the utility modules and zipped dependencies, which will meet MVP requirements.
 

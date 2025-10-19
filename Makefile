@@ -1,7 +1,7 @@
 # Makefile for automated terraform deployement
 .PHONY: all build test clean
 # Running 'make all' will build requirements, then follow terrafom steps, then run tests, then clean
-all: build requirements terraform_step1 terraform_step2 terraform_step3 unit_tests pep8tests Safety clean 
+project: build requirements terraform_step1 terraform_step2 terraform_step3 unit_tests pep8tests Safety clean 
 
 build:
 	@echo "Building project..."
@@ -29,7 +29,7 @@ unit_tests:
 
 pep8tests: 
 	@echo "Running PEP8 compliance tests..."
-	pytest --cov=. --cov-report=term-missing && flake8 ."
+	pytest --cov=. --cov-report=term-missing && flake8 .
 
 safety: 
 	@echo "Running Safety tests..."
