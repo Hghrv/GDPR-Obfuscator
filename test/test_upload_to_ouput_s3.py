@@ -5,9 +5,9 @@ import boto3
 from moto import mock_aws
 import pytest
 from testfixtures import LogCapture
+import os
 
 # Setting s3 bucket fixture for mock tests
-
 
 @pytest.fixture
 def mock_s3_bucket():

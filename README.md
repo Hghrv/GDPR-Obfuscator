@@ -98,21 +98,27 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       "email_address": ['j.smith@email.com']
     }
 
-    Example of valid buckets and file key for automated terraform deployment from cli:
+    Example of valid bucket name and file key
 
-      export BUCKET_NAME='gdpr-data-storage'
-      export BUCKET_NAME_OUTPUT='gdpr-obfuscator-ouput'
-      export FILE_KEY='new_data/test_file.csv'
-      export OUTPUT_KEY='obfuscated_data/obfuscated-file.csv'
-      export OUTPUT_KEY_JSON='obfuscated_data/obfuscated-file.json' 
-      export OUTPUT_KEY_PARQUET='obfuscated_data/obfuscated-file.parquet'
-    
-    (Note that  bucket names must be unique in AWS, so ensure to provide a unique identifiyer when setting the environmentvariables)
+      <bucket name>   'gdpr-data-storage'
+      
+      <file key>      'new_data/test_file.csv'
+      
+      <input path>          s3://{bucket_name}/{file_key}
+              or      s3://obfuscated_data/obfuscated-file.csv
+              or      s3://obfuscated_data/obfuscated-file.json
+              or      s3://obfuscated_data/obfuscated-file.parquet
+
+      <output path>   s3:/obfuscated_data/obfuscated-file.csv
+              or      s3://obfuscated_data/obfuscated-file.json
+              or      s3://obfuscated_data/obfuscated-file.parquet
+
+    Note that  bucket names must be unique in AWS, so ensure to provide correct bucket name and input key and also make sure to retrieve the correct output path , for example 'obfuscated_data/obfuscated-file.csv' for .csv output.
 
     Also ensure to export the python path before running tests:
       export PYTHONPATH=$pwd
 
-    In summary, upload a file to the s3 input key and download the obfuscated result from the output s3, using aws_cli or a pre-configured AWS EventBridge. More details on the following notes.
+    In summary, upload a file (Csv, or Json, or Parquet format) to the s3 input key and download the obfuscated result (Csv/Json/Parquet) from the output s3, using aws_cli or a pre-configured AWS EventBridge with a runtime of less than a minute. More details on the following notes.
 
 ## Installation and configuration
 
@@ -146,7 +152,10 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         AWS Secret Access Key: #############
         Default region name: eu-west-2
         Default output format: json
- 
+
+        Important Note:
+        Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
+
       . Terraform 1.13 (Hashicorp installation procedure before terraform backend reconfiguration: optional as already included in requirement.txt)
         pip install python-terraform=1.13.3
 

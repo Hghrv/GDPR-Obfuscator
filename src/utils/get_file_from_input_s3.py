@@ -4,7 +4,7 @@ import botocore.exceptions
 import logging
 from io import StringIO
 import json
-
+import os
 
 def get_file_from_input_s3(bucket_name, file_key):
     """

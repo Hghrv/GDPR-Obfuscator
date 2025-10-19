@@ -24,7 +24,7 @@ def mock_s3_bucket():
 
         # Uploading test files to bucket
         test_files = ["src/test_file.csv",
-                      "src/test_file.json", "src/test_file.pkl"]
+                      "src/test_file.json", "src/test_file.parquet"]
         for file in test_files:
             s3.put_object(Bucket=bucket_name, Key=file)
 

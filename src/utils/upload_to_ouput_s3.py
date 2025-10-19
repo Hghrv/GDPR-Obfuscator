@@ -1,7 +1,7 @@
 import logging
 import boto3
 from botocore.exceptions import ClientError, ParamValidationError
-
+import os
 
 def upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload):
     """
@@ -12,10 +12,10 @@ def upload_to_ouput_s3(bucket_name_output, output_key, file_to_upload):
         - returns: the transformed dataframe
     """
 
-    try:
+    try:        
         s3_client = boto3.client('s3')
         s3_client.put_object(Bucket=bucket_name_output,
-                             Key=output_key, Body=file_to_upload)
+                            Key=output_key, Body=file_to_upload)
         logging.info(f"writing to s3 ... {output_key}")
         print(
             f"Obfuscated file uploaded to s3://{bucket_name_output}/{output_key}")

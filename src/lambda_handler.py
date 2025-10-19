@@ -12,6 +12,7 @@ from src.utils.write_to_bytestream import write_to_bytestream
 from src.utils.upload_to_ouput_s3 import upload_to_ouput_s3
 from src.utils.csv_to_json import csv_to_json
 from src.utils.json_to_parquet import json_to_parquet
+import os
 
 
 def lambda_handler(event, context='aws_context'):
@@ -34,8 +35,7 @@ def lambda_handler(event, context='aws_context'):
     """
     # Initialize S3 client
     s3_client = boto3.client('s3')
-
-    # Define bucket name and file keys
+    
     bucket_name = 'gdpr-data-storage'   # Data Input
     bucket_name_output = 'gdpr-obfuscator-ouput'    # Data Output
     # Parse the JSON string body  of the event

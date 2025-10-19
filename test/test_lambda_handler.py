@@ -11,8 +11,7 @@ import json
 import pyarrow.parquet as pap
 import pyarrow as pa
 
-
-# Setting s3 bucket fixture for mock tests
+"""# Setting s3 bucket fixture for mock tests
 @pytest.fixture
 def mock_s3_bucket():
     with mock_aws():
@@ -24,7 +23,7 @@ def mock_s3_bucket():
         )
 
         test_files = ["src/test_file.csv",
-                      "src/test_file.json", "src/test_file.pkl"]
+                    "src/test_file.json", "src/test_file.pkl"]
         for file in test_files:
             s3.put_object(Bucket=bucket_name, Key=file)
 
@@ -32,7 +31,7 @@ def mock_s3_bucket():
             body = f
             s3.put_object(Bucket=bucket_name, Key="test_file_1.csv", Body=body)
 
-        yield bucket_name
+        yield bucket_name"""
 
 # defining tests
 
