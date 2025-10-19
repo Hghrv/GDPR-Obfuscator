@@ -2,13 +2,13 @@
 
 Obfuscator Project for sensitive data under UK GDPR (General Data Protection Regulation, United Kindom).
 
-This project provides an efficient and secure obfuscating tool that meets current GDPR requirements and that can also be deployed to create resources on a valid AWS account. The tool can easily be integrated in third party applications, for example by setting a streaming event bridge on the AWS console.
+This project provides an efficient and secure obfuscating tool that meets current GDPR requirements and that can also be deployed to create resources on a valid AWS account. The tool can easily be integrated in third party applications, for example by coling or importing the repository as a library module into a Python codebase, or by setting a streaming event bridge on the AWS console.
 
 ## Context
 
 The present project aims at providing a general-purpose tool to process data being ingested to AWS and intercept personally identifiable information (PII).
 
-Since information stored by Northcoders data projects are intended for bulk data analysis only, there is a requirement under UK GDPR to ensure that all data containing information that could be used to identify an individual should be anonymised.
+Since information stored by Northcoders data projects are intended for bulk data analysis only, there is a requirement under UK GDPR to ensure that all data containing information that could be used to identify an individual should effectively be anonymised.
 
 ## The legal framework
 
@@ -46,7 +46,7 @@ Building our Data Obfuscator library under GDRP regulation and guidelines ensure
 
 Building a fully tested and automated GDPR Obfuscator for deployment on AWS and third-party software integration, in other words an obfuscation tool that can be integrated as a library module into a Python codebase.
 
-The tool is to be supplied with the S3 location of a file containing sensitive information, and the names of the affected fields. It should create a new file or byte stream object containing an exact copy of the input file but with the sensitive data replaced with obfuscated strings. The calling procedure will handle saving the output to its destination. It is expected that the tool will be deployed within the AWS account.
+The tool is to be supplied with the S3 location of a file containing sensitive information, and the names of the affected fields. It is expected to handle files of up to 1MB with a runtime of less than 1 minute tand create a new file or byte stream object containing an exact copy of the input file but with the sensitive data replaced with obfuscated strings. Each calling procedure handles processing the content of the unique input key and saving the output to its destination with an unique output key . The tool can securely work within an AWS account or provided AWS credentials as this project aims to demonstrate.
 
 ### Framework and Purpose
 
@@ -62,7 +62,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       Moto  for mock-testing / secret-manager
 
-      Make for automated deployment of project
+      Make for automated deployment of the project
 
 ## How to use
 
@@ -98,7 +98,21 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       "email_address": ['j.smith@email.com']
     }
 
+    Example of valid buckets and file key for automated terraform deployment from cli:
+
+      export BUCKET_NAME='gdpr-data-storage'
+      export BUCKET_NAME_OUTPUT='gdpr-obfuscator-ouput'
+      export FILE_KEY='new_data/test_file.csv'
+      export OUTPUT_KEY='obfuscated_data/obfuscated-file.csv'
+      export OUTPUT_KEY_JSON='obfuscated_data/obfuscated-file.json' 
+      export OUTPUT_KEY_PARQUET='obfuscated_data/obfuscated-file.parquet'
+
+    Also ensure to export the python path before running tests:
+      export PYTHONPATH=$pwd
+
     In summary, upload a file to the s3 input key and download the obfuscated result from the output s3, using aws_cli or a pre-configured AWS EventBridge.More details on the following notes.
+
+## Installation and configuration
 
     - System Requirements
       . Linux cli or WSL for Windows
@@ -108,23 +122,23 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       . Make
  
     - Installation
-      . Clone repository
-        git clone <link_to_git_repository>
-      . Create and activate virtual environment and export pythonpath
-        python -m venv venv
-        source venv/bin/activate
-        export PYTHONPATH=$pwd
+      . Clone repository:
+          git clone <link_to_git_repository>
+      . Create and activate virtual environment and export pythonpath:
+          python -m venv venv
+          source venv/bin/activate
+          export PYTHONPATH=$pwd
        
 
 
-      . Install requirements
-        pip install tequirements.txt
+      . Install requirements:
+          pip install tequirements.txt
 
-      . AWS_cli 1.42.40
-        python -m pip install awscli=1.42.40
+      . Install AWS_cli 1.42.40:
+          python -m pip install awscli=1.42.40
 
         Then configure your AWS credentials with the following command:
-        aws configure
+          aws configure
 
         A prompt message should appear inviting to enter your AWS credentials. Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below: 
 
@@ -160,7 +174,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       or, 
       
-### Automated deployement with Make
+### Automated deployment with Make
 
       To skip the steps above, run the following command after installing AWS_CLI:
       
@@ -199,10 +213,10 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         Default output format [None]: json
 
         . Uploading the test csv file into the input s3 bucket:
-        aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
+            aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
 
         . Downloading the obfuscated csv file locally from the output s3 bucket:
-       aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
+            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
 
 ### Note on Unit-Testing and Mock-Tests
 
@@ -212,7 +226,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
           pytest
 
       . For more detailed printing, add the "-vvvrp" flag as below:
-        pytest -vvvrp
+          pytest -vvvrp
 
       . To run PEP8 compliance tests:
           pytest --cov=. --cov-report=term-missing && flake8 .
