@@ -106,11 +106,13 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       export OUTPUT_KEY='obfuscated_data/obfuscated-file.csv'
       export OUTPUT_KEY_JSON='obfuscated_data/obfuscated-file.json' 
       export OUTPUT_KEY_PARQUET='obfuscated_data/obfuscated-file.parquet'
+    
+    (Note that  bucket names must be unique in AWS, so ensure to provide a unique identifiyer when setting the environmentvariables)
 
     Also ensure to export the python path before running tests:
       export PYTHONPATH=$pwd
 
-    In summary, upload a file to the s3 input key and download the obfuscated result from the output s3, using aws_cli or a pre-configured AWS EventBridge.More details on the following notes.
+    In summary, upload a file to the s3 input key and download the obfuscated result from the output s3, using aws_cli or a pre-configured AWS EventBridge. More details on the following notes.
 
 ## Installation and configuration
 
@@ -129,8 +131,6 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
           source venv/bin/activate
           export PYTHONPATH=$pwd
        
-
-
       . Install requirements:
           pip install tequirements.txt
 
@@ -146,9 +146,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         AWS Secret Access Key: #############
         Default region name: eu-west-2
         Default output format: json
-
-        
-
+ 
       . Terraform 1.13 (Hashicorp installation procedure before terraform backend reconfiguration: optional as already included in requirement.txt)
         pip install python-terraform=1.13.3
 
@@ -194,13 +192,21 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         Example of valid csv input: "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
 
         - To get the obfuscated result from the output s3:
-        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
+        
+        or
+        
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <you_local_path>
+
+        or
+
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <you_local_path>
 
         Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
         
         By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
 
-### Note on Terraform deployment and Passkeys
+### Notes on Terraform deployment and Passkeys
 
         Ensure that all package versions are the same across dependencies within the virtual environment.
 
@@ -215,8 +221,14 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         . Uploading the test csv file into the input s3 bucket:
             aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
 
-        . Downloading the obfuscated csv file locally from the output s3 bucket:
+        . Downloading the obfuscated .csv file locally from the output s3 bucket:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
+
+        . Downloading the obfuscated .json file locally from the output s3 bucket:
+            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <you_local_path>
+
+        . Downloading the obfuscated .parquet file locally from the output s3 bucket:
+            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <you_local_path>
 
 ### Note on Unit-Testing and Mock-Tests
 
@@ -240,9 +252,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
      . Running Makefile for automated workflow:
           make project
       
-      Running the Makefile altenatively will also securely run the tests by default before deploying the Terraform scripts to create the ressources on the AWS account. Three s3 buckets will be created (input, terraform backend, and output) and the lambda_handler.py will be deployed with all the utility modules and zipped dependencies, which will meet MVP requirements.
-
-      
+      Running the Makefile altenatively will also securely run the tests by default before deploying the Terraform scripts to create the ressources on the AWS account. Three s3 buckets will be created (input, terraform backend, and output) and the lambda_handler.py will be deployed with all the utility modules and zipped dependencies, which will meet MVP requirements.     
 
 ## Documentation
 
