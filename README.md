@@ -254,15 +254,22 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       . Run tests on your terminal with the command below:
           pytest
+        All unit tests are succesful, hence ensuring reliability and accuracy as to the behaviour of different created modules:
+![Current Coverage results](pytest_results.png)
 
       . For more detailed printing, add the "-vvvrp" flag as below:
           pytest -vvvrp
-
+        
       . To run PEP8 compliance tests:
           pytest --cov=. --cov-report=term-missing && flake8 .
       
+      The current project states scored 95% in coverage tests.
+![Current Coverage results](coverage_tests_results.png)
+
       . For vulnerability and safety checks:
           safety scan
+      The python scripts passed the safety checks as the scrrenshot belows shows:
+![Current Safety scan results](safety_scan_results.png)
 
       . Test files in the <test/> folder can also be run indidually by specifing the path. For example:
           pytest src/test_lambda_handler.py
