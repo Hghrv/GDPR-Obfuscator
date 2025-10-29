@@ -9,7 +9,7 @@ build:
 
 requirements: 
 	@echo "Installng project requirements"
-	pip install requirements.txt
+	pip install -r requirements.txt
 	
 unit_tests:
 	@echo "Running unit-tests with pytest modules..."

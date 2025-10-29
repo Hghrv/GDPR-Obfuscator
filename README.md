@@ -138,7 +138,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
           export PYTHONPATH=$pwd
        
       . Install requirements (Step 2):
-          pip install tequirements.txt
+          pip install -r requirements.txt
 
       . Install AWS_cli 1.42.40:
           python -m pip install awscli=1.42.40
