@@ -8,7 +8,6 @@ pytest-cov==7.0.0   # Coverage plugin
 pytest-flake8==1.3.0   # Flake8 plugin
 autopep8==2.3.2 # PEP* Formatting
 safety==3.6.2   # Safety scan
-python-terraform==1.13.3    # For Terraform scripting
 boto3==1.40.40  # For s3 client connection
 awscli==1.42.49   # CLI for AWS
 botocore==1.40.49   # For Boto3
