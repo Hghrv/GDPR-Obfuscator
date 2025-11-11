@@ -42,7 +42,7 @@ The GDPR framework described previously actually constitutes the rationale for b
 
 Building our Data Obfuscator library under GDRP regulation and guidelines ensures that data processing platforms and developers can have a viable and optimal option at hand providing up-to-date and secured solutions.
 
-### MVP (Most Valuable Product)
+### MVP (Minimal Valuable Product)
 
 Building a fully tested and automated GDPR Obfuscator for deployment on AWS and third-party software integration, in other words an obfuscation tool that can be integrated as a library module into a Python codebase.
 
@@ -53,6 +53,8 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
       Linux CLI
 
       Python 3
+
+      AWS_cli
 
       Terraform for AWS resources creation
 
@@ -66,21 +68,23 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## How to use
 
-    The setup process is deployed in 3 main steps:
+    The setup process follows 5 main steps:
 
-    step 1: Clone repository then create/activate virtual environment and export Pythonpath environment variable as the current working directory.
+    step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
-    Step 2: Install AWS_CLI and configure AWS credentials
+    Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
-    Step 3: Install requirements
+    Step 3: Install project requirements specified in requirements.txt
           
-    Step 4: At this point you should be able to run pytest with all 30 tests passing succesfully: 
+    Step 4: At this point you should be able to run pytest with all 30 tests passing succesfully
+
+  ![Current Pytest results](pytest_results.png)
 
     Step 5: Install Terraform (If you wish to use terraform scripts for further AWS development)
 
       sudo apt install terraform=1.13.3-1
 
-    Note the required version of terraform installed using 'apt' installer instead 'pip'.
+    (Note the required version of terraform 1.13.3-1 installed using 'apt' installer instead of 'pip'.)
 
     All steps are detailed in the next section 'Installation and Configuration'. Please read all instructions carefully.
     
@@ -249,7 +253,11 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ### Notes on Terraform deployment and Passkeys
 
-        Ensure that all package versions are the same across dependencies within the virtual environment.
+        Optionally for code reusability and developement purposes, Terraform scripts were written to be deployed by running a <terraform init> command, then <terraform plan>, and finally <terraform apply>, thus creating three s3 buckets (input, terraform backend, and output) and deploying the lambda_handler.py with all the utility modules and zipped dependencies, in order to meet MVP requirements. The command <terraform plan reconfigure> was used after reconfiguring the tfstate file to be stored in the terraform backend bucket.
+        
+        Also note that the bucket names must be unique as required by AWS and therefore this project is provided with its own bucket names and AWS credentials for testing pruposes. However comments were carefully added in the terraform files (main.tf, s3.tf and s3_output.tf) so that steps could be replicated and re-edited by developpers if needed for their own AWS accounts. 
+
+        Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
 
         . To set your AWS credentials run the folowing sript in your control line interface:
 
@@ -302,7 +310,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
      . Running Makefile for automated workflow:
           make project
       
-      Running the Makefile altenatively will also securely run the tests by default before deploying the Terraform scripts to create the ressources on the AWS account. Three s3 buckets will be created (input, terraform backend, and output) and the lambda_handler.py will be deployed with all the utility modules and zipped dependencies, which will meet MVP requirements.     
+      If you have AWS_CLI 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
 
 ## Documentation
 
