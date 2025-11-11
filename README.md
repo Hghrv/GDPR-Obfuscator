@@ -66,9 +66,31 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## How to use
 
+    The setup process is deployed in 3 main steps:
+
+    step 1: Clone repository then create/activate virtual environment and export Pythonpath environment variable as the current working directory.
+
+    Step 2: Install AWS_CLI and configure AWS credentials
+
+    Step 3: Install requirements
+          
+    Step 4: At this point you should be able to run pytest with all 30 tests passing succesfully: 
+
+    Step 5: Install Terraform (If you wish to use terraform scripts for further AWS development)
+
+      sudo apt install terraform=1.13.3-1
+
+    Note the required version of terraform installed using 'apt' installer instead 'pip'.
+
+    All steps are detailed in the next section 'Installation and Configuration'. Please read all instructions carefully.
+    
+    Also ensure that AWS_CLI is installed and AWS credentials are configured with the provided credentials in order to ensure that all 30 tests are passing, otherwise there will be 21 passing and 9 failing. This is because those 9 tests are testing the lambda_handler.py on the actual AWS IAM account, so they are not using mock-S3 buckets like the tests for composite units.
+
+    Usage and Examples:
+
     This general-purpose tool to process data being ingested to AWS and intercept personally identifiable information (PII). A Json event for this purpose requires a file key (here the input key s3://gdpr-data-storage/new_data/test_file.csv) and PII fields to obfuscate (here the name and email address) in order to trigger the Lambda handler.
     
-    When a csv file containing is sent into the input s3 bucket with the key s3://gdpr-data-storage/new_data/test_file.csv, the stored file with be reset with the table new content.
+    When a csv file containing is sent into the input s3 bucket with the key s3://gdpr-data-storage/new_data/test_file.csv, the stored file with be reset with the table's new content.
     
     This new object will trigger the Lambda and the obfuscated file will be reset in the output s3 bucket with the key s3://'obfuscated_data/obfuscated-file.csv'.
 
@@ -125,7 +147,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
     - System Requirements
       . Linux cli or WSL for Windows
       . Python 3.12.7
-      . Terraform 1.13
+      . Terraform 1.13.3-1
       . AWS_cli 1.42.40
       . Make
  
@@ -156,8 +178,9 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         Important Note:
         Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
 
-      . Terraform 1.13 (Hashicorp installation procedure before terraform backend reconfiguration: optional as already included in requirement.txt)
-        pip install python-terraform=1.13.3
+      . Terraform 1.13 
+      Hashicorp installation procedure before terraform backend reconfiguration: 
+        sudo apt install terraform=1.13.3-1
 
 ### Projet setup: Follow steps or skip to Make deployment section
 
