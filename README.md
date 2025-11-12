@@ -42,7 +42,7 @@ The GDPR framework described previously actually constitutes the rationale for b
 
 Building our Data Obfuscator library under GDRP regulation and guidelines ensures that data processing platforms and developers can have a viable and optimal option at hand providing up-to-date and secured solutions.
 
-### Minimum Viable Product (MVP)
+### Minimal Viable Product (MVP)
 
 Building a fully tested and automated GDPR Obfuscator for deployment on AWS and third-party software integration, in other words an obfuscation tool that can be integrated as a library module into a Python codebase.
 
@@ -101,11 +101,13 @@ Important notice:
 
     The tool can also handle valid Json and Parquet files. In that case set the input file key with .json or .paquet extension ( for example, s3://gdpr-data-storage/new_data/test_file.jon or s3://gdpr-data-storage/new_data/test_file.parquet)
 
-    Example of valid Csv content:
+Example of valid Csv content:
+
     student_id,name,course,cohort,graduation_date,email_address
     1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'
 
-    Example of valid Json content:
+Example of valid Json content:
+
     {
       "student_id": 1234,
       "name": 'John Smith',
@@ -115,7 +117,8 @@ Important notice:
       "email_address": 'j.smith@email.com'
     }
 
-    Example of valid Parquet content:
+Example of valid Parquet content:
+
     {
       "student_id": [1234],
       "name": ['John Smith'],
@@ -125,7 +128,7 @@ Important notice:
       "email_address": ['j.smith@email.com']
     }
 
-    Example of valid bucket name and file key
+Example of valid bucket name and file key
 
       <bucket name>   'gdpr-data-storage'
       
@@ -140,6 +143,8 @@ Important notice:
               or      s3://obfuscated_data/obfuscated-file.json
               or      s3://obfuscated_data/obfuscated-file.parquet
 
+Notes:
+
     Note that  bucket names must be unique in AWS, so ensure to provide correct bucket name and input key and also make sure to retrieve the correct output path , for example 'obfuscated_data/obfuscated-file.csv' for .csv output.
 
     Also ensure to export the python path before running tests:
@@ -151,18 +156,17 @@ Important notice:
 
 ### System requirements
 
-
       . Linux cli or WSL for Windows
       . Python 3.12.7
       . Terraform 1.13.3-1
       . AWS_cli 1.42.40
       . Make
- 
+
 ### Installation
   
-In the terminal follow the following steps to initialise the project and run tests:
+    In the terminal, follow steps 1 to 5 detailed below in order to initialise the project and run tests:
 
-- Step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
+Step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
       . Clone repository:
           git clone <link_to_git_repository>
@@ -171,35 +175,35 @@ In the terminal follow the following steps to initialise the project and run tes
           source venv/bin/activate
           export PYTHONPATH=$pwd
 
-- Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
+Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
       . Install AWS_cli 1.42.40:
           python -m pip install awscli=1.42.40
 
-        Then configure your AWS credentials with the following command:
+      . Then configure your AWS credentials with the following command:
           aws configure
 
-        A prompt message should appear inviting to enter your AWS credentials. Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below: 
+      A prompt message should appear inviting to enter your AWS credentials. Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below: 
 
         AWS Access Key ID: ###########
         AWS Secret Access Key: #############
         Default region name: eu-west-2
         Default output format: json
 
-        Important Note:
-        Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
+    Important Note:
+      Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
 
-- Step 3: Install project requirements as specified in requirements.txt
+Step 3: Install project requirements as specified in requirements.txt
 
       . Install project requirements:
           pip install -r requirements.txt
 
-- Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
+Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
 
       . Run Unit-tests:
           pytest
 
-- Step 5: Install Terraform (For further AWS development purposes)
+Step 5: Install Terraform (For further AWS development purposes)
 
       . Terraform 1.13.3-1 Hashicorp installation procedure before terraform backend reconfiguration: 
           sudo apt install terraform=1.13.3-1
@@ -215,59 +219,68 @@ In the terminal follow the following steps to initialise the project and run tes
       . Run the following command after installing AWS_CLI:
           Make project
 
-      The Make file will setup the virtual environment if needed, will install required libraries, then run unit-tests as well as PEP8 compliance and Safety tests. Pytest-cov and Pytest-flake8 are used as pluggings with pytest and Safety is used to scan seurity potential vulnerabilities and issues.
+   Notes:
+
+      The Make file will setup the virtual environment if needed, will install required libraries, then run unit-tests as well as PEP8 compliance and Safety tests.
+      
+      Pytest-cov and Pytest-flake8 are used as pluggings with pytest and Safety is used to scan seurity potential vulnerabilities and issues.
 
       This project provides a coverage of 95% causing no vulnerabilities found and the tests reports demonstrate. This could be explained by numerous comment lines and the backend policies enforced and ignored during testing.
 
-    - Integration
-        Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events
+      Please refer to 'Notes on Unit-Testing and Mock-Tests' section for additional notes on tests.
+
+Integration
+
+      Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events
 
 ### Using AWS_CLI to upload data and retrieve output
 
-        - To upload your local csv file to the bucket:
-            aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
+    - To upload your local csv file to the bucket:
+        aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
 
-        - Calling the Lambda handler (if needed manually):
+    - Calling the Lambda handler (if needed manually):
             python src/lambda_handler.py
          
-        Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
-        Example of valid csv input: "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
-
-        - To get the obfuscated result from the output s3:
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated-file.csv <your_local_path>
+      Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
         
-        or
+    Example of valid csv input:
+    "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
+
+    - To get the obfuscated result from the output s3:
+        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated-file.csv <your_local_path>
         
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.json <your_local_path>
+      or
+        
+        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.json <your_local_path>
 
-        or
+      or
 
-          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.parquet <your_local_path>
+        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.parquet <your_local_path>
 
 ### Similar example using Boto3 to upload CSV data and retrieve CSV output
 
-        - Uploading your local csv file to the bucket:
-            s3_client = boto3.client('s3')
-            s3_client.put_object(Bucket="gdpr-data-storage",
-                            Key="new_data/test_file.csv", Body=file_to_upload)
+    - Uploading your local csv file to the bucket:
+        s3_client = boto3.client('s3')
+        s3_client.put_object(Bucket="gdpr-data-storage",
+                        Key="new_data/test_file.csv", Body=file_to_upload)
                             
-        - Retrieving the obfuscated result from the output s3:
-            s3_client = boto3.client('s3')
-            s3_client.get_object(Bucket="gdpr-obfuscator-ouput", Key="obfuscated_data/obfuscated-file.csv")
+    - Retrieving the obfuscated result from the output s3:
+        s3_client = boto3.client('s3')
+        s3_client.get_object(Bucket="gdpr-obfuscator-ouput", Key="obfuscated_data/obfuscated-file.csv")
 
-        Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
+      Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
         
-        By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
+      By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
 
 ### Notes on Terraform deployment and Passkeys
 
-        Optionally for code reusability and developement purposes, Terraform scripts were written to be deployed by running a <terraform init> command, then <terraform plan>, and finally <terraform apply>, thus creating three s3 buckets (input, terraform backend, and output) and deploying the lambda_handler.py with all the utility modules and zipped dependencies, in order to meet MVP requirements. The command <terraform plan reconfigure> was used after reconfiguring the tfstate file to be stored in the terraform backend bucket.
+      Optionally for code reusability and developement purposes, Terraform scripts were written to be deployed by running a <terraform init> command, then <terraform plan>, and finally <terraform apply>, thus creating three s3 buckets (input, terraform backend, and output) and deploying the lambda_handler.py with all the utility modules and zipped dependencies, in order to meet MVP requirements. The command <terraform plan reconfigure> was used after reconfiguring the tfstate file to be stored in the terraform backend bucket.
         
-        Also note that the bucket names must be unique as required by AWS and therefore this project is provided with its own bucket names and AWS credentials for testing pruposes. However comments were carefully added in the terraform files (main.tf, s3.tf and s3_output.tf) so that steps could be replicated and re-edited by developpers if needed for their own AWS accounts. 
+      Also note that the bucket names must be unique as required by AWS and therefore this project is provided with its own bucket names and AWS credentials for testing pruposes. However comments were carefully added in the terraform files (main.tf, s3.tf and s3_output.tf) so that steps could be replicated and re-edited by developpers if needed for their own AWS accounts. 
 
-        Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
+      Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
 
-        . To set your AWS credentials run the folowing sript in your control line interface:
+      . To set your AWS credentials run the folowing sript in your control line interface:
 
         $ aws configure
         AWS Access Key ID [None]: YOUR_PROVIDED_ACCESS_ID
@@ -275,16 +288,16 @@ In the terminal follow the following steps to initialise the project and run tes
         Default region name [None]: us-west-2
         Default output format [None]: json
 
-        . Uploading the test csv file into the input s3 bucket:
+      . Uploading the test csv file into the input s3 bucket:
             aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
 
-        . Downloading the obfuscated .csv file locally from the output s3 bucket:
+      . Downloading the obfuscated .csv file locally from the output s3 bucket:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
 
-        . Downloading the obfuscated .json file locally from the output s3 bucket:
+      . Downloading the obfuscated .json file locally from the output s3 bucket:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <you_local_path>
 
-        . Downloading the obfuscated .parquet file locally from the output s3 bucket:
+      . Downloading the obfuscated .parquet file locally from the output s3 bucket:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <you_local_path>
 
 ### Note on Unit-Testing and Mock-Tests
@@ -294,7 +307,7 @@ In the terminal follow the following steps to initialise the project and run tes
       . Run tests on your terminal with the command below:
           pytest
 
-        All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
+      All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
 ![Current Pytest results](pytest_results.png)
 
       . For more detailed printing, add the "-vvvrp" flag as below:
@@ -322,29 +335,29 @@ In the terminal follow the following steps to initialise the project and run tes
 
 ## Documentation
 
-* More on obfuscation principles
+- More on obfuscation principles
   <https://standards.education.gov.uk/standard/data-anonymisation-pseudonymisation-and-obfuscation#howtommeet>
 
-* Boto3 / Hashicorp
+- Boto3 / Hashicorp
   <https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli>
 
-* Moto / AWS Mock Tests
+- Moto / AWS Mock Tests
   <https://docs.getmoto.org/en/latest/docs/getting_started.html>
 
-* Terraform documentation
+- Terraform documentation
   <https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli>
 
-* Amazon Web Services (AWS)
+- Amazon Web Services (AWS)
   <https://docs.aws.amazon.com/.html>
   
-* AWS_cli
+- AWS_cli
   <https://docs.aws.amazon.com/cli/latest/userguide/cli_s3_code_examples.html>
 
-* EventBridge (on AWS Console)
+- EventBridge (on AWS Console)
   <https://docs.aws.amazon.com/.html>
 
 ## Licence
 
-Legal Notice:
+    Legal Notice:
 
-All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
+    All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
