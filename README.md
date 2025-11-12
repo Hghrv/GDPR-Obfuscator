@@ -32,7 +32,7 @@ These ‘data protection principles’ are strict rules requiring that people or
 
 In addition to those legal requirements, there is also a strong emphasis on the processing of more sensitive data (Ex: race, ethnicity, religion, biometric id, health, background checks etc.) as data subjects carry fundamental rights such as the right to transparency and access to information, right to rectification/erasure, objections and also restrictions on automated decision-making. Therefore personal data must also be handled in accordance with these principles.
 
-## A Descriptive Overview of the Project
+## Descriptive Overview of the Project
 
 ### Objectives
 
@@ -42,7 +42,7 @@ The GDPR framework described previously actually constitutes the rationale for b
 
 Building our Data Obfuscator library under GDRP regulation and guidelines ensures that data processing platforms and developers can have a viable and optimal option at hand providing up-to-date and secured solutions.
 
-### MVP (Minimal Valuable Product)
+### Minimum Viable Product (MVP)
 
 Building a fully tested and automated GDPR Obfuscator for deployment on AWS and third-party software integration, in other words an obfuscation tool that can be integrated as a library module into a Python codebase.
 
@@ -54,7 +54,7 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       Python 3
 
-      AWS_cli
+      AWS_cli for AWS access via control line interface
 
       Terraform for AWS resources creation
 
@@ -64,17 +64,17 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
       Moto  for mock-testing / secret-manager
 
-      Make for automated deployment of the project
+      Make for automated project setup
 
 ## How to use
 
-    The setup process follows 5 main steps:
+    The setup process follows 5 required steps in the order listed below. Instructions for each step are detailed in the next section 'Installation and Configuration'. Please read all instructions carefully.
 
     step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
     Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
-    Step 3: Install project requirements specified in requirements.txt
+    Step 3: Install project requirements as specified in requirements.txt
           
     Step 4: At this point you should be able to run pytest with all 30 tests passing succesfully
 
@@ -86,11 +86,12 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
     (Note the required version of terraform 1.13.3-1 installed using 'apt' installer instead of 'pip'.)
 
-    All steps are detailed in the next section 'Installation and Configuration'. Please read all instructions carefully.
     
-    Also ensure that AWS_CLI is installed and AWS credentials are configured with the provided credentials in order to ensure that all 30 tests are passing, otherwise there will be 21 passing and 9 failing. This is because those 9 tests are testing the lambda_handler.py on the actual AWS IAM account, so they are not using mock-S3 buckets like the tests for composite units.
+Important notice:
 
-    Usage and Examples:
+    Make sure that AWS_CLI is installed and AWS credentials are configured with the provided credentials, prior to running pytest, in order to ensure that all 30 tests are passing, otherwise there would be 21 tests passing and 9 failing. This is because those 9 tests are testing the lambda_handler.py on the actual AWS IAM account, so they are not using mock-S3 buckets like the tests for composite units.
+
+  Usage and Examples:
 
     This general-purpose tool to process data being ingested to AWS and intercept personally identifiable information (PII). A Json event for this purpose requires a file key (here the input key s3://gdpr-data-storage/new_data/test_file.csv) and PII fields to obfuscate (here the name and email address) in order to trigger the Lambda handler.
     
@@ -148,23 +149,29 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## Installation and configuration
 
-    - System Requirements
+### System requirements
+
+
       . Linux cli or WSL for Windows
       . Python 3.12.7
       . Terraform 1.13.3-1
       . AWS_cli 1.42.40
       . Make
  
-    - Installation
+### Installation
+  
+In the terminal follow the following steps to initialise the project and run tests:
+
+- Step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
+
       . Clone repository:
           git clone <link_to_git_repository>
-      . Create and activate virtual environment and export pythonpath(Step 1):
+      . Create and activate virtual environment, then export pythonpath:
           python -m venv venv
           source venv/bin/activate
           export PYTHONPATH=$pwd
-       
-      . Install requirements (Step 2):
-          pip install -r requirements.txt
+
+- Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
       . Install AWS_cli 1.42.40:
           python -m pip install awscli=1.42.40
@@ -182,25 +189,26 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
         Important Note:
         Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
 
-      . Terraform 1.13 
-      Hashicorp installation procedure before terraform backend reconfiguration: 
-        sudo apt install terraform=1.13.3-1
+- Step 3: Install project requirements as specified in requirements.txt
 
-### Projet setup: Follow steps or skip to Make deployment section
+      . Install project requirements:
+          pip install -r requirements.txt
 
-      In the terminal follow the following steps to initialise the project and run tests:
-      
-      . Step 1 Create / Activate your Virtual environment as in (step 1 in previous section).
+- Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
 
-      . Step 2: Install requirements (as in step 2 in previous section).
+      . Run Unit-tests:
+          pytest
 
-      . Step 3: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
+- Step 5: Install Terraform (For further AWS development purposes)
 
-      or, 
-      
+      . Terraform 1.13.3-1 Hashicorp installation procedure before terraform backend reconfiguration: 
+          sudo apt install terraform=1.13.3-1
+
 ### Automated setup with Make
 
       To skip the steps above:
+      . Ensure that AWS_cli is installed and configured(step2)
+
       . Ensure that Make is installed:
           pip install make
 
