@@ -68,19 +68,19 @@ The tool is to be supplied with the S3 location of a file containing sensitive i
 
 ## How to use
 
-    The setup process follows 5 required steps in the order listed below. Instructions for each step are detailed in the next section 'Installation and Configuration'. Please read all instructions carefully.
+The setup process follows 5 required steps in the order listed below. Instructions for each step are detailed in the next section 'Installation and Configuration'. Please read all instructions carefully.
 
-    step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
+step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
-    Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
+Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
-    Step 3: Install project requirements as specified in requirements.txt
-          
-    Step 4: At this point you should be able to run pytest with all 30 tests passing succesfully
+Step 3: Install project requirements as specified in requirements.txt
 
-  ![Current Pytest results](pytest_results.png)
+Step 4: At this point you should be able to run pytest with all 30 tests passing succesfully
 
-    Step 5: Install Terraform (If you wish to use terraform scripts for further AWS development)
+![Current Pytest results](pytest_results.png)
+
+Step 5: Install Terraform (If you wish to use terraform scripts for further AWS development)
 
       sudo apt install terraform=1.13.3-1
 
@@ -93,13 +93,13 @@ Important notice:
 
   Usage and Examples:
 
-    This general-purpose tool to process data being ingested to AWS and intercept personally identifiable information (PII). A Json event for this purpose requires a file key (here the input key s3://gdpr-data-storage/new_data/test_file.csv) and PII fields to obfuscate (here the name and email address) in order to trigger the Lambda handler.
-    
-    When a csv file containing is sent into the input s3 bucket with the key s3://gdpr-data-storage/new_data/test_file.csv, the stored file with be reset with the table's new content.
-    
-    This new object will trigger the Lambda and the obfuscated file will be reset in the output s3 bucket with the key s3://'obfuscated_data/obfuscated-file.csv'.
+  This general-purpose tool to process data being ingested to AWS and intercept personally identifiable information (PII). A Json event for this purpose requires a file key (here the input key s3://gdpr-data-storage/new_data/test_file.csv) and PII fields to obfuscate (here the name and email address) in order to trigger the Lambda handler.
 
-    The tool can also handle valid Json and Parquet files. In that case set the input file key with .json or .paquet extension ( for example, s3://gdpr-data-storage/new_data/test_file.jon or s3://gdpr-data-storage/new_data/test_file.parquet)
+  When a csv file containing is sent into the input s3 bucket with the key s3://gdpr-data-storage/new_data/test_file.csv, the stored file with be reset with the table's new content.
+
+  This new object will trigger the Lambda and the obfuscated file will be reset in the output s3 bucket with the key s3://'obfuscated_data/obfuscated-file.csv'.
+
+  The tool can also handle valid Json and Parquet files. In that case set the input file key with .json or .paquet extension ( for example, s3://gdpr-data-storage/new_data/test_file.jon or s3://gdpr-data-storage/new_data/test_file.parquet)
 
 Example of valid Csv content:
 
@@ -145,12 +145,12 @@ Example of valid bucket name and file key
 
 Notes:
 
-    Note that  bucket names must be unique in AWS, so ensure to provide correct bucket name and input key and also make sure to retrieve the correct output path , for example 'obfuscated_data/obfuscated-file.csv' for .csv output.
+Note that  bucket names must be unique in AWS, so ensure to provide correct bucket name and input key and also make sure to retrieve the correct output path , for example 'obfuscated_data/obfuscated-file.csv' for .csv output.
 
-    Also ensure to export the python path before running tests:
+Also ensure to export the python path before running tests:
       export PYTHONPATH=$pwd
 
-    In summary, upload a file (Csv, or Json, or Parquet format) to the s3 input key and download the obfuscated result (Csv/Json/Parquet) from the output s3, using aws_cli or a pre-configured AWS EventBridge with a runtime of less than a minute. More details on the following notes.
+In summary, upload a file (Csv, or Json, or Parquet format) to the s3 input key and download the obfuscated result (Csv/Json/Parquet) from the output s3, using aws_cli or a pre-configured AWS EventBridge with a runtime of less than a minute. More details on the following notes.
 
 ## Installation and configuration
 
@@ -164,7 +164,7 @@ Notes:
 
 ### Installation
   
-    In the terminal, follow steps 1 to 5 detailed below in order to initialise the project and run tests:
+In the terminal, follow steps 1 to 5 detailed below in order to initialise the project and run tests:
 
 Step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
@@ -183,15 +183,15 @@ Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
       . Then configure your AWS credentials with the following command:
           aws configure
 
-      A prompt message should appear inviting to enter your AWS credentials. Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below: 
+A prompt message should appear inviting to enter your AWS credentials.Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below:
 
-        AWS Access Key ID: ###########
-        AWS Secret Access Key: #############
-        Default region name: eu-west-2
-        Default output format: json
+    AWS Access Key ID: ###########
+    AWS Secret Access Key: #############
+    Default region name: eu-west-2
+    Default output format: json
 
-    Important Note:
-      Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
+Important Note:
+Never display your AWS credentials on public platforms or in code and make sure to store them securely as they consitute a very sensitive and powerful authentication wall.
 
 Step 3: Install project requirements as specified in requirements.txt
 
@@ -210,39 +210,39 @@ Step 5: Install Terraform (For further AWS development purposes)
 
 ### Automated setup with Make
 
-      To skip the steps above:
-      . Ensure that AWS_cli is installed and configured(step2)
+To skip the steps above:
+. Ensure that AWS_cli is installed and configured(step2)
 
-      . Ensure that Make is installed:
+. Ensure that Make is installed:
           pip install make
 
-      . Run the following command after installing AWS_CLI:
+. Run the following command after installing AWS_CLI:
           Make project
 
-   Notes:
+Notes:
 
-      The Make file will setup the virtual environment if needed, will install required libraries, then run unit-tests as well as PEP8 compliance and Safety tests.
-      
-      Pytest-cov and Pytest-flake8 are used as pluggings with pytest and Safety is used to scan seurity potential vulnerabilities and issues.
+The Make file will setup the virtual environment if needed, will install required libraries, then run unit-tests as well as PEP8 compliance and Safety tests.
 
-      This project provides a coverage of 95% causing no vulnerabilities found and the tests reports demonstrate. This could be explained by numerous comment lines and the backend policies enforced and ignored during testing.
+Pytest-cov and Pytest-flake8 are used as pluggings with pytest and Safety is used to scan seurity potential vulnerabilities and issues.
 
-      Please refer to 'Notes on Unit-Testing and Mock-Tests' section for additional notes on tests.
+This project provides a coverage of 95% causing no vulnerabilities found and the tests reports demonstrate. This could be explained by numerous comment lines and the backend policies enforced and ignored during testing.
+
+Please refer to 'Notes on Unit-Testing and Mock-Tests' section for additional notes on tests.
 
 Integration
 
-      Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events
+Uploading a csv file to input s3 bucket will trigger the lambda handler with the file location and the sensitive fields ["name", "email_address"] as lambda events
 
-### Using AWS_CLI to upload data and retrieve output
+### Using AWS_cli to upload data and retrieve output
 
     - To upload your local csv file to the bucket:
         aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
 
     - Calling the Lambda handler (if needed manually):
             python src/lambda_handler.py
-         
-      Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
-        
+
+Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
+
     Example of valid csv input:
     "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
 
@@ -268,17 +268,17 @@ Integration
         s3_client = boto3.client('s3')
         s3_client.get_object(Bucket="gdpr-obfuscator-ouput", Key="obfuscated_data/obfuscated-file.csv")
 
-      Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
-        
-      By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
+Alternatively, you may set an event bridge on the AWS console to set your own events and requests dynamically in order to handle the input and output files (gdpr-data-storage/new_data/test_file.csv and gdpr-obfuscator-ouput/obfuscated_file.csv respectively) in a streaming environment.
 
-### Notes on Terraform deployment and Passkeys
+By requirements, this project obfuscates the name and email address, but you may also set your own json events (See links provided in the documentation section to setup a json test event or an EventBridge on your AWS Console).
 
-      Optionally for code reusability and developement purposes, Terraform scripts were written to be deployed by running a <terraform init> command, then <terraform plan>, and finally <terraform apply>, thus creating three s3 buckets (input, terraform backend, and output) and deploying the lambda_handler.py with all the utility modules and zipped dependencies, in order to meet MVP requirements. The command <terraform plan reconfigure> was used after reconfiguring the tfstate file to be stored in the terraform backend bucket.
-        
-      Also note that the bucket names must be unique as required by AWS and therefore this project is provided with its own bucket names and AWS credentials for testing pruposes. However comments were carefully added in the terraform files (main.tf, s3.tf and s3_output.tf) so that steps could be replicated and re-edited by developpers if needed for their own AWS accounts. 
+### Notes on Terraform deployment and Passkeys and AWS_cli
 
-      Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
+Optionally for code reusability and developement purposes, Terraform scripts were written to be deployed by running a terraform init command, then 'terraform plan', and finally 'terraform apply', thus creating three s3 buckets (input, terraform backend, and output) and deploying the lambda_handler.py with all the utility modules and zipped dependencies, in order to meet MVP requirements. The command 'terraform plan reconfigure' was used after reconfiguring the tfstate file to be stored in the terraform backend bucket.
+
+Also note that the bucket names must be unique as required by AWS and therefore this project is provided with its own bucket names and AWS credentials for testing pruposes. However, guiding comments were carefully added in the terraform files (main.tf, s3.tf and s3_output.tf) so that steps could be replicated and re-edited by developpers if needed for their own AWS accounts.
+
+Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
 
       . To set your AWS credentials run the folowing sript in your control line interface:
 
@@ -288,26 +288,26 @@ Integration
         Default region name [None]: us-west-2
         Default output format [None]: json
 
-      . Uploading the test csv file into the input s3 bucket:
+      . Uploading the test csv file into the input s3 bucket with AWS_cli:
             aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
 
-      . Downloading the obfuscated .csv file locally from the output s3 bucket:
-            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <you_local_path>
+      . Downloading the obfuscated .csv file locally from the output s3 bucket with AWS_cli:
+            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <your_local_path>
 
-      . Downloading the obfuscated .json file locally from the output s3 bucket:
-            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <you_local_path>
+      . Downloading the obfuscated .json file locally from the output s3 bucket with AWS_cli:
+            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <your_local_path>
 
-      . Downloading the obfuscated .parquet file locally from the output s3 bucket:
-            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <you_local_path>
+      . Downloading the obfuscated .parquet file locally from the output s3 bucket with AWS_cli:
+            aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <your_local_path>
 
 ### Note on Unit-Testing and Mock-Tests
 
-      In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety compliance. While the lambda handler was tested with an actual AWS account, the utility modules where tested with mock_aws to simulate s3 buckets and reduce storage costs in the potential event where an event bridge might sent a large quantity of files for tests. This is in order to maintain elasticity of resources. Similarly, separate output and backend s3 buckets are created to avoid reccuring costs (when input and output are processed in the same s3 bucket) according to recommendations on the AWS website.
+In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety compliance. While the lambda handler was tested with an actual AWS account, the utility modules where tested with mock_aws to simulate s3 buckets and reduce storage costs in the potential event where an event bridge might sent a large quantity of files for tests. This is in order to maintain elasticity of resources. Similarly, separate output and backend s3 buckets are created to avoid reccuring costs (when input and output are processed in the same s3 bucket) according to recommendations on the AWS website.
 
       . Run tests on your terminal with the command below:
           pytest
 
-      All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
+All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
 ![Current Pytest results](pytest_results.png)
 
       . For more detailed printing, add the "-vvvrp" flag as below:
@@ -322,7 +322,7 @@ Integration
       . For vulnerability and safety checks:
           safety scan
 
-      Python scripts for the project also succesfully passed safety checks as the screenshot below shows:
+Python scripts for the project also succesfully passed safety checks as the screenshot below shows:
 ![Current Safety scan results](safety_scan_results.png)
 
       . Test files in the <test/> folder can also be run indidually by specifing the path. For example:
@@ -331,7 +331,7 @@ Integration
      . Running Makefile for automated workflow:
           make project
       
-      If you have AWS_CLI 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
+If you have AWS_CLI 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
 
 ## Documentation
 
@@ -358,6 +358,6 @@ Integration
 
 ## Licence
 
-    Legal Notice:
+Legal Notice:
 
-    All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
+All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
