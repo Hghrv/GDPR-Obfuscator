@@ -246,9 +246,11 @@ Uploading a csv file to input s3 bucket will trigger the lambda handler with the
 ### Using AWS_cli to upload data and retrieve output
 
 - To upload your local csv file to the bucket:
+
           aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
 
 - Calling the Lambda handler (if needed manually):
+
           python src/lambda_handler.py
 
 Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
@@ -327,6 +329,7 @@ In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety complianc
           pytest
 
 All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
+
 ![Current Pytest results](pytest_results.png)
 
 . For more detailed printing, add the "-vvvrp" flag as below:
@@ -338,6 +341,7 @@ All unit-tests were succesful, hence ensuring reliability and accuracy of all th
           pytest --cov=. --cov-report=term-missing && flake8 .
 
 Our current project states scored 95% in coverage tests.
+
 ![Current Coverage results](coverage_tests_results.png)
 
 . For vulnerability and safety checks:
@@ -345,6 +349,7 @@ Our current project states scored 95% in coverage tests.
           safety scan
 
 Python scripts for the project also succesfully passed safety checks as the screenshot below shows:
+
 ![Current Safety scan results](safety_scan_results.png)
 
 . Test files in the test/ folder can also be run indidually by specifing the path. For example:
@@ -382,6 +387,4 @@ If you have AWS_CLI 1.42.40 already installed and correctly configured, running 
 
 ## Licence
 
-Legal Notice:
-
-All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
+Legal Notice: All commercial rights related to this project are reserved by the owner [TechReturners](https://www.techreturners.com/) (Copyright 2025).
