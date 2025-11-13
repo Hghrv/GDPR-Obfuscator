@@ -84,12 +84,11 @@ Step 5: Install Terraform (If you wish to use terraform scripts for further AWS 
 
       sudo apt install terraform=1.13.3-1
 
-    (Note the required version of terraform 1.13.3-1 installed using 'apt' installer instead of 'pip'.)
+(Note the required version of terraform 1.13.3-1 installed using 'apt' installer instead of 'pip'.)
 
-    
 Important notice:
 
-    Make sure that AWS_CLI is installed and AWS credentials are configured with the provided credentials, prior to running pytest, in order to ensure that all 30 tests are passing, otherwise there would be 21 tests passing and 9 failing. This is because those 9 tests are testing the lambda_handler.py on the actual AWS IAM account, so they are not using mock-S3 buckets like the tests for composite units.
+  Make sure that AWS_CLI is installed and AWS credentials are configured with the provided credentials, prior to running pytest, in order to ensure that all 30 tests are passing, otherwise there would be 21 tests passing and 9 failing. This is because those 9 tests are testing the lambda_handler.py on the actual AWS IAM account, so they are not using mock-S3 buckets like the tests for composite units.
 
   Usage and Examples:
 
@@ -168,19 +167,19 @@ In the terminal, follow steps 1 to 5 detailed below in order to initialise the p
 
 Step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
-      . Clone repository:
+. Clone repository:
           git clone <link_to_git_repository>
-      . Create and activate virtual environment, then export pythonpath:
+. Create and activate virtual environment, then export pythonpath:
           python -m venv venv
           source venv/bin/activate
           export PYTHONPATH=$pwd
 
 Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
-      . Install AWS_cli 1.42.40:
+. Install AWS_cli 1.42.40:
           python -m pip install awscli=1.42.40
 
-      . Then configure your AWS credentials with the following command:
+. Then configure your AWS credentials with the following command:
           aws configure
 
 A prompt message should appear inviting to enter your AWS credentials.Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below:
@@ -195,17 +194,17 @@ Never display your AWS credentials on public platforms or in code and make sure 
 
 Step 3: Install project requirements as specified in requirements.txt
 
-      . Install project requirements:
+. Install project requirements:
           pip install -r requirements.txt
 
 Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
 
-      . Run Unit-tests:
+. Run Unit-tests:
           pytest
 
 Step 5: Install Terraform (For further AWS development purposes)
 
-      . Terraform 1.13.3-1 Hashicorp installation procedure before terraform backend reconfiguration: 
+. Terraform 1.13.3-1 Hashicorp installation procedure before terraform backend reconfiguration:
           sudo apt install terraform=1.13.3-1
 
 ### Automated setup with Make
@@ -236,35 +235,35 @@ Uploading a csv file to input s3 bucket will trigger the lambda handler with the
 ### Using AWS_cli to upload data and retrieve output
 
     - To upload your local csv file to the bucket:
-        aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
+          aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
 
-    - Calling the Lambda handler (if needed manually):
-            python src/lambda_handler.py
+- Calling the Lambda handler (if needed manually):
+          python src/lambda_handler.py
 
 Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
 
     Example of valid csv input:
     "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
 
-    - To get the obfuscated result from the output s3:
-        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated-file.csv <your_local_path>
-        
-      or
-        
-        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.json <your_local_path>
+- To get the obfuscated result from the output s3:
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated-file.csv <your_local_path>
 
-      or
+or
 
-        aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.parquet <your_local_path>
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.json <your_local_path>
+
+or
+
+          aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated_file.parquet <your_local_path>
 
 ### Similar example using Boto3 to upload CSV data and retrieve CSV output
 
-    - Uploading your local csv file to the bucket:
+- Uploading your local csv file to the bucket:
         s3_client = boto3.client('s3')
         s3_client.put_object(Bucket="gdpr-data-storage",
                         Key="new_data/test_file.csv", Body=file_to_upload)
-                            
-    - Retrieving the obfuscated result from the output s3:
+
+- Retrieving the obfuscated result from the output s3:
         s3_client = boto3.client('s3')
         s3_client.get_object(Bucket="gdpr-obfuscator-ouput", Key="obfuscated_data/obfuscated-file.csv")
 
@@ -280,7 +279,7 @@ Also note that the bucket names must be unique as required by AWS and therefore 
 
 Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
 
-      . To set your AWS credentials run the folowing sript in your control line interface:
+. To set your AWS credentials run the folowing sript in your control line interface:
 
         $ aws configure
         AWS Access Key ID [None]: YOUR_PROVIDED_ACCESS_ID
@@ -288,49 +287,49 @@ Please ensure that all package versions are the same across dependencies within 
         Default region name [None]: us-west-2
         Default output format [None]: json
 
-      . Uploading the test csv file into the input s3 bucket with AWS_cli:
+. Uploading the test csv file into the input s3 bucket with AWS_cli:
             aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
 
-      . Downloading the obfuscated .csv file locally from the output s3 bucket with AWS_cli:
+. Downloading the obfuscated .csv file locally from the output s3 bucket with AWS_cli:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <your_local_path>
 
-      . Downloading the obfuscated .json file locally from the output s3 bucket with AWS_cli:
+. Downloading the obfuscated .json file locally from the output s3 bucket with AWS_cli:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <your_local_path>
 
-      . Downloading the obfuscated .parquet file locally from the output s3 bucket with AWS_cli:
+. Downloading the obfuscated .parquet file locally from the output s3 bucket with AWS_cli:
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <your_local_path>
 
 ### Note on Unit-Testing and Mock-Tests
 
 In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety compliance. While the lambda handler was tested with an actual AWS account, the utility modules where tested with mock_aws to simulate s3 buckets and reduce storage costs in the potential event where an event bridge might sent a large quantity of files for tests. This is in order to maintain elasticity of resources. Similarly, separate output and backend s3 buckets are created to avoid reccuring costs (when input and output are processed in the same s3 bucket) according to recommendations on the AWS website.
 
-      . Run tests on your terminal with the command below:
+. Run tests on your terminal with the command below:
           pytest
 
 All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
 ![Current Pytest results](pytest_results.png)
 
-      . For more detailed printing, add the "-vvvrp" flag as below:
+. For more detailed printing, add the "-vvvrp" flag as below:
           pytest -vvvrp
-        
-      . To run PEP8 compliance tests:
+
+. To run PEP8 compliance tests:
           pytest --cov=. --cov-report=term-missing && flake8 .
-      
-      Our current project states scored 95% in coverage tests.
+
+Our current project states scored 95% in coverage tests.
 ![Current Coverage results](coverage_tests_results.png)
 
-      . For vulnerability and safety checks:
+. For vulnerability and safety checks:
           safety scan
 
 Python scripts for the project also succesfully passed safety checks as the screenshot below shows:
 ![Current Safety scan results](safety_scan_results.png)
 
-      . Test files in the <test/> folder can also be run indidually by specifing the path. For example:
-          pytest src/test_lambda_handler.py
+. Test files in the test/ folder can also be run indidually by specifing the path. For example:
+          pytest test/test_lambda_handler.py
 
-     . Running Makefile for automated workflow:
+. Running Makefile for automated workflow:
           make project
-      
+
 If you have AWS_CLI 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
 
 ## Documentation
