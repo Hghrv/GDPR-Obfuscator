@@ -147,6 +147,7 @@ Notes:
 Note that  bucket names must be unique in AWS, so ensure to provide correct bucket name and input key and also make sure to retrieve the correct output path , for example 'obfuscated_data/obfuscated-file.csv' for .csv output.
 
 Also ensure to export the python path before running tests:
+
       export PYTHONPATH=$pwd
 
 In summary, upload a file (Csv, or Json, or Parquet format) to the s3 input key and download the obfuscated result (Csv/Json/Parquet) from the output s3, using aws_cli or a pre-configured AWS EventBridge with a runtime of less than a minute. More details on the following notes.
@@ -168,8 +169,11 @@ In the terminal, follow steps 1 to 5 detailed below in order to initialise the p
 Step 1: Clone the current repository / Create and activate virtual environment / Export PYTHONPATH environment variable as the current working directory
 
 . Clone repository:
+
           git clone <link_to_git_repository>
+
 . Create and activate virtual environment, then export pythonpath:
+
           python -m venv venv
           source venv/bin/activate
           export PYTHONPATH=$pwd
@@ -177,9 +181,11 @@ Step 1: Clone the current repository / Create and activate virtual environment /
 Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
 . Install AWS_cli 1.42.40:
+
           python -m pip install awscli=1.42.40
 
 . Then configure your AWS credentials with the following command:
+
           aws configure
 
 A prompt message should appear inviting to enter your AWS credentials.Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below:
@@ -195,16 +201,19 @@ Never display your AWS credentials on public platforms or in code and make sure 
 Step 3: Install project requirements as specified in requirements.txt
 
 . Install project requirements:
+
           pip install -r requirements.txt
 
 Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
 
 . Run Unit-tests:
+
           pytest
 
 Step 5: Install Terraform (For further AWS development purposes)
 
 . Terraform 1.13.3-1 Hashicorp installation procedure before terraform backend reconfiguration:
+
           sudo apt install terraform=1.13.3-1
 
 ### Automated setup with Make
@@ -213,9 +222,11 @@ To skip the steps above:
 . Ensure that AWS_cli is installed and configured(step2)
 
 . Ensure that Make is installed:
+
           pip install make
 
 . Run the following command after installing AWS_CLI:
+
           Make project
 
 Notes:
@@ -234,7 +245,7 @@ Uploading a csv file to input s3 bucket will trigger the lambda handler with the
 
 ### Using AWS_cli to upload data and retrieve output
 
-    - To upload your local csv file to the bucket:
+- To upload your local csv file to the bucket:
           aws s3 cp /path/to/your/file s3://gdpr-data-storage/new_data/test_file.csv
 
 - Calling the Lambda handler (if needed manually):
@@ -242,10 +253,12 @@ Uploading a csv file to input s3 bucket will trigger the lambda handler with the
 
 Note that the input csv file must be a valid csv with the first row listing the following columns and the second row listing the values.
 
-    Example of valid csv input:
+Example of valid csv input:
+
     "student_id,name,course,cohort,graduation_date,email_address\n1234,'John Smith','Software','December','2024-03-31','j.smith@email.com'"
 
 - To get the obfuscated result from the output s3:
+
           aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_data/obfuscated-file.csv <your_local_path>
 
 or
@@ -259,11 +272,13 @@ or
 ### Similar example using Boto3 to upload CSV data and retrieve CSV output
 
 - Uploading your local csv file to the bucket:
+
         s3_client = boto3.client('s3')
         s3_client.put_object(Bucket="gdpr-data-storage",
                         Key="new_data/test_file.csv", Body=file_to_upload)
 
 - Retrieving the obfuscated result from the output s3:
+
         s3_client = boto3.client('s3')
         s3_client.get_object(Bucket="gdpr-obfuscator-ouput", Key="obfuscated_data/obfuscated-file.csv")
 
@@ -288,15 +303,19 @@ Please ensure that all package versions are the same across dependencies within 
         Default output format [None]: json
 
 . Uploading the test csv file into the input s3 bucket with AWS_cli:
+
             aws s3 cp /path/to/your/src/test_file.csv s3://gdpr-data-storage/
 
 . Downloading the obfuscated .csv file locally from the output s3 bucket with AWS_cli:
+
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.csv <your_local_path>
 
 . Downloading the obfuscated .json file locally from the output s3 bucket with AWS_cli:
+
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.json <your_local_path>
 
 . Downloading the obfuscated .parquet file locally from the output s3 bucket with AWS_cli:
+
             aws s3 cp s3://gdpr-obfuscator-ouput/obfuscated_file.parquet <your_local_path>
 
 ### Note on Unit-Testing and Mock-Tests
@@ -304,30 +323,36 @@ Please ensure that all package versions are the same across dependencies within 
 In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety compliance. While the lambda handler was tested with an actual AWS account, the utility modules where tested with mock_aws to simulate s3 buckets and reduce storage costs in the potential event where an event bridge might sent a large quantity of files for tests. This is in order to maintain elasticity of resources. Similarly, separate output and backend s3 buckets are created to avoid reccuring costs (when input and output are processed in the same s3 bucket) according to recommendations on the AWS website.
 
 . Run tests on your terminal with the command below:
+
           pytest
 
 All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
 ![Current Pytest results](pytest_results.png)
 
 . For more detailed printing, add the "-vvvrp" flag as below:
+
           pytest -vvvrp
 
 . To run PEP8 compliance tests:
+
           pytest --cov=. --cov-report=term-missing && flake8 .
 
 Our current project states scored 95% in coverage tests.
 ![Current Coverage results](coverage_tests_results.png)
 
 . For vulnerability and safety checks:
+
           safety scan
 
 Python scripts for the project also succesfully passed safety checks as the screenshot below shows:
 ![Current Safety scan results](safety_scan_results.png)
 
 . Test files in the test/ folder can also be run indidually by specifing the path. For example:
+
           pytest test/test_lambda_handler.py
 
 . Running Makefile for automated workflow:
+
           make project
 
 If you have AWS_CLI 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
