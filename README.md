@@ -210,7 +210,7 @@ Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 
 
           pytest
 
-Step 5: Install Terraform (For further AWS development purposes)
+Step 5: Install Terraform (Optional, for further AWS development purposes)
 
 . Terraform 1.13.3-1 Hashicorp installation procedure before terraform backend reconfiguration:
 
@@ -225,7 +225,7 @@ To skip the steps above:
 
           pip install make
 
-. Run the following command after installing AWS_CLI:
+. Run the following command after installing AWS_cli:
 
           Make project
 
@@ -294,7 +294,7 @@ Optionally for code reusability and developement purposes, Terraform scripts wer
 
 Also note that the bucket names must be unique as required by AWS and therefore this project is provided with its own bucket names and AWS credentials for testing pruposes. However, guiding comments were carefully added in the terraform files (main.tf, s3.tf and s3_output.tf) so that steps could be replicated and re-edited by developpers if needed for their own AWS accounts.
 
-Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_CLI is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
+Please ensure that all package versions are the same across dependencies within the virtual environment as specified in the requirement.txt file. Also ensure that the correct version AWS_cli is installed and that the AWS credentials are correctly configured before running tests (Whole-unit tests related to the AWS IAM account would fail otherwise).
 
 . To set your AWS credentials run the folowing sript in your control line interface:
 
@@ -361,7 +361,7 @@ Python scripts for the project also succesfully passed safety checks as the scre
 
           make project
 
-If you have AWS_CLI 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
+If you have AWS_cli 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
 
 ## Documentation
 
