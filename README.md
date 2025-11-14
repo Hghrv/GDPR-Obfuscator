@@ -328,7 +328,8 @@ In this project, Pytest uses Coverage and Pep8 plugins for PEP8 safety complianc
 
           pytest
 
-All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules:
+All unit-tests were succesful, hence ensuring reliability and accuracy of all the different created modules. The screenshot
+below shows the Pytest results of all 30 tests passed in 21.36s:
 
 ![Current Pytest results](pytest_results.png)
 
