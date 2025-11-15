@@ -1,0 +1,2 @@
+student_id,name,course,cohort,email_address,city,country
+1234,'John Smith','Software','December','j.smith@email.com','london','uk'

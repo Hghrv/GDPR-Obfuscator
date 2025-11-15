@@ -146,11 +146,8 @@ class TestObfuscationOfCsvFiles:
         for column in ["student_id", "name", "course", "cohort", "graduation_date", "email_address"]:
             assert df.iloc[0][column] == expected.iloc[0][column]
 
-    def test_lambda_handler_obfuscates_csv_files_correctly_with_different_event_scenarios(self):
-        pass
 
-
-class TestObfuscatorReturnsStatusCode200ForInputFilesWithVariousStructures:
+class TestObfuscatorReturnsStatusCode200InVariousEventScenariosForInputFilesWithVariousStructures:
     def test_lambda_handler_returns_status_code_200_with_various_number_of_fields_to_obfuscate(self):
         json_event_1 = {
             "file_to_obfuscate": "new_data/test_file.csv",  # input test-key
@@ -174,15 +171,56 @@ class TestObfuscatorReturnsStatusCode200ForInputFilesWithVariousStructures:
         assert response['body'] == json.dumps(
             "Obfuscation completed successfully!")
 
-    ############ >>>> To add <<<<<#####################
-    def test_lambda_handler_returns_status_code_200_with_files_containing_various_number_of_rows(self):
-        pass
+    ############ >>>> Added <<<<<#####################
+    def test_lambda_handler_returns_status_code_200_with_file_containing_more_than_two_rows(self):
+        json_event = {
+            "file_to_obfuscate": "new_data/test_file_2.csv",  # input test-key
+            "pii_fields": ["name", "email"]
+        }
+        aws_context = 'provided_aws_context'
 
-    def test_lambda_handler_returns_status_code_200_with_files_containing_various_number_of_columns_to_obfucate(self):
-        pass
+        response = lambda_handler(json_event, aws_context)
+        assert response['statusCode'] == 200
+        assert response['body'] == json.dumps(
+            "Obfuscation completed successfully!")
+    
+    def test_lambda_handler_returns_status_code_200_with_file_containing_greater_number_of_columns(self):
+        # csv content: 
+        json_event = {
+            "file_to_obfuscate": "new_data/test_file_3.csv",  # input test-key
+            "pii_fields": ["name", "email"]
+        }
+        aws_context = 'provided_aws_context'
 
-    def test_lambda_handler_uploads_returns_status_code_200_with_files_containing_various_number_of_columns(self):
-        pass
+        response = lambda_handler(json_event, aws_context)
+        assert response['statusCode'] == 200
+        assert response['body'] == json.dumps(
+            "Obfuscation completed successfully!")
+
+    def test_lambda_handler_returns_status_code_200_with_file_containing_one_column_to_obfuscate_only(self):
+        json_event = {
+            "file_to_obfuscate": "new_data/test_file_4.csv",  # input test-key
+            "pii_fields": ["name", "email"]
+        }
+        aws_context = 'provided_aws_context'
+
+        response = lambda_handler(json_event, aws_context)
+        assert response['statusCode'] == 200
+        assert response['body'] == json.dumps(
+            "Obfuscation completed successfully!")
+        
+    def test_lambda_handler_returns_status_code_200_when_no_obfuscation_is_necessary_in_the_file(self):
+        json_event = {
+            "file_to_obfuscate": "new_data/test_file_5.csv",  # input test-key
+            "pii_fields": ["name", "email"]
+        }
+        aws_context = 'provided_aws_context'
+
+        response = lambda_handler(json_event, aws_context)
+        assert response['statusCode'] == 200
+        assert response['body'] == json.dumps(
+            "Obfuscation completed successfully!")
+############################################################
 
 
 class TestObfuscatorlogsErrors:
