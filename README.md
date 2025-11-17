@@ -357,12 +357,14 @@ Python scripts for the project also succesfully passed safety checks as the scre
 
           pytest test/test_lambda_handler.py
 
-. Running Makefile for automated workflow:
+### Running Makefile for automated workflow
+  
 
-          make project
 
 If you have AWS_cli 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default. Press "CMD + C" or "CTRL + C" to exit the display of coverage results and start using the tool. You should be good too go once all tests are succesful.
 
+          make project
+          
 Note on Safety checks:
 
 The passing safety scan published on the sceenshot above was done using a free version of Safety, so you may need to create a free Safety account in order to run safety tests. Run safety checks separately with the command "safety scan" and follow the instructions to create a free account on your browser and run the checks.
