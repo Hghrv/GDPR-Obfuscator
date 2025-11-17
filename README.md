@@ -188,7 +188,7 @@ Step 2: Install AWS_cli 1.42.40 and configure AWS credentials
 
           aws configure
 
-A prompt message should appear inviting to enter your AWS credentials.Ensure that the default region name is set to "eu-west-2", and that the default output format is set to  format as below:
+A prompt message should appear inviting to enter your AWS credentials.Ensure that the default region name is set to "eu-west-2", and that the default output format is set to "json" format as below:
 
     AWS Access Key ID: ###########
     AWS Secret Access Key: #############
@@ -204,7 +204,7 @@ Step 3: Install project requirements as specified in requirements.txt
 
           pip install -r requirements.txt
 
-Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the sectio 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
+Step 4: Run safety and unit tests and PEP 8 compliance checks (Go to the section 'Note on Unit-Testing and Mock-Tests' for detailed instruction on tests)
 
 . Run Unit-tests:
 
@@ -341,7 +341,7 @@ below shows the Pytest results of all 30 tests passed in 21.36s:
 
           pytest --cov=. --cov-report=term-missing && flake8 .
 
-Our current project states scored 95% in coverage tests.
+Our current project states scored 97% in coverage tests.
 
 ![Current Coverage results](coverage_tests_results.png)
 
@@ -361,7 +361,11 @@ Python scripts for the project also succesfully passed safety checks as the scre
 
           make project
 
-If you have AWS_cli 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default.
+If you have AWS_cli 1.42.40 already installed and correctly configured, running the Makefile altenatively will also activate a virtual environment and securely run the tests by default. Press "CMD + C" or "CTRL + C" to exit the display of coverage results and start using the tool. You should be good too go once all tests are succesful.
+
+Note on Safety checks:
+
+The passing safety scan published on the sceenshot above was done using a free version of Safety, so you may need to create a free Safety account in order to run safety tests. Run safety checks separately with the command "safety scan" and follow the instructions to create a free account on your browser and run the checks.
 
 ## Documentation
 
