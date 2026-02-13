@@ -1,5 +1,5 @@
 # GDPR-Obfuscator
-# Website Link:  [ https://hghrv.github.io/Portfolio-Website/](https://hghrv.github.io/Portfolio-Website/projects.html#project7)
+# Project presentation link:  [ https://hghrv.github.io/Portfolio-Website/PROJECT7/](https://hghrv.github.io/Portfolio-Website/projects.html#project7)
 
 Obfuscator Project for sensitive data under UK GDPR (General Data Protection Regulation, United Kindom).
 
